@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">BLDC Monitor</string>
+    <string name="title_home">Information</string>
+    <string name="title_dashboard">Configuration</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="power_action">Power</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Voltage regulation</string>
+    <string name="sync_header">Power regulation</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Voltage limit</string>
+    <string name="reply_title">Voltage limit [V]</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Power limit</string>
+    <string name="attachment_title">Power limit [W]</string>
+
+</resources>
