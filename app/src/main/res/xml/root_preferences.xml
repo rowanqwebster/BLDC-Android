@@ -1,5 +1,5 @@
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         android:title="@string/messages_header">
@@ -9,12 +9,12 @@
             />
         <EditTextPreference
             android:dependency="signature"
-            android:defaultValue="reply"
+            android:defaultValue="test"
             android:entries="@array/reply_entries"
             android:entryValues="@array/reply_values"
             android:key="reply"
             android:title="@string/reply_title"
-            android:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -25,12 +25,12 @@
             />
         <EditTextPreference
             android:dependency="signature"
-            android:defaultValue="reply"
+            android:defaultValue="test"
             android:entries="@array/reply_entries"
             android:entryValues="@array/reply_values"
             android:key="reply"
             android:title="@string/attachment_title"
-            android:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
 </PreferenceScreen>
