@@ -99,9 +99,9 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getActivity(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
         }
 
-        //final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-        //devicelist.setAdapter(adapter);
-        devicelist.setOnItemClickListener(myListClickListener);
+        final ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+        devicelist.setAdapter(adapter);
+        //devicelist.setOnItemClickListener(myListClickListener);
     }
 
     private AdapterView.OnItemClickListener myListClickListener = new AdapterView.OnItemClickListener() {
