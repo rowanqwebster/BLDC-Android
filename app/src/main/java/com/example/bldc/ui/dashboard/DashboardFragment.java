@@ -110,6 +110,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void sendSignal ( int number ) {
+        msg("Sending: " + number);
         if ( btSocket != null ) {
             try {
                 btSocket.getOutputStream().write(number);
