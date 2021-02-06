@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.bldc.R;
+import com.example.bldc.ui.dashboard.DashboardFragment;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -49,15 +50,6 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        /*
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-         */
         setHasOptionsMenu(true);
         return root;
     }
@@ -101,7 +93,7 @@ public class HomeFragment extends Fragment {
 
         final ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         devicelist.setAdapter(adapter);
-        //devicelist.setOnItemClickListener(myListClickListener);
+        devicelist.setOnItemClickListener(myListClickListener);
     }
 
     private AdapterView.OnItemClickListener myListClickListener = new AdapterView.OnItemClickListener() {
@@ -109,6 +101,14 @@ public class HomeFragment extends Fragment {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String info = ((TextView) view).getText().toString();
             String address = info.substring(info.length()-17);
+
+            Fragment dashboard = new DashboardFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(EXTRA_ADDRESS, address);
+            dashboard.setArguments(bundle);
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, dashboard)
+                    .commit();
 
             //Intent i = new Intent(HomeFragment.this, ledControl.class);
             //i.putExtra(EXTRA_ADDRESS, address);
