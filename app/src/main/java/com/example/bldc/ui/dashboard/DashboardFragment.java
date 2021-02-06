@@ -69,35 +69,35 @@ public class DashboardFragment extends Fragment {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                sendSignal("1");
+                sendSignal(1);
             }
         });
 
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                sendSignal("2");
+                sendSignal(2);
             }
         });
 
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                sendSignal("3");
+                sendSignal(3);
             }
         });
 
         btn4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                sendSignal("4");
+                sendSignal(4);
             }
         });
 
         btn5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                sendSignal("5");
+                sendSignal(5);
             }
         });
 
@@ -109,10 +109,10 @@ public class DashboardFragment extends Fragment {
         });
     }
 
-    private void sendSignal ( String number ) {
+    private void sendSignal ( int number ) {
         if ( btSocket != null ) {
             try {
-                btSocket.getOutputStream().write(number.toString().getBytes());
+                btSocket.getOutputStream().write(number);
             } catch (IOException e) {
                 msg("Error");
             }
