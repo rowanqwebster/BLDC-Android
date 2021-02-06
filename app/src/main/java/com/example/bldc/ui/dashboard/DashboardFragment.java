@@ -139,7 +139,7 @@ public class DashboardFragment extends Fragment {
         private boolean ConnectSuccess = true;
 
         @Override
-        protected  void onPreExecute () {
+        protected void onPreExecute () {
             progress = ProgressDialog.show(getActivity(), "Connecting...", "Please Wait!!!");
         }
 
