@@ -69,35 +69,35 @@ public class DashboardFragment extends Fragment {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                sendSignal(1);
+                sendSignal(13);
             }
         });
 
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                sendSignal(2);
+                sendSignal(22);
             }
         });
 
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                sendSignal(3);
+                sendSignal(46);
             }
         });
 
         btn4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                sendSignal(4);
+                sendSignal(96);
             }
         });
 
         btn5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
-                sendSignal(5);
+                sendSignal(189);
             }
         });
 
@@ -133,7 +133,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void msg (String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     private class ConnectBT extends AsyncTask<Void, Void, Void> {
