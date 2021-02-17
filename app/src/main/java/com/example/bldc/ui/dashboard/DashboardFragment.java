@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +31,9 @@ public class DashboardFragment extends Fragment {
     private DashboardViewModel dashboardViewModel;
     private String address;
 
-    Button btn1, btn2, btn3, btn4, btn5, btnDisconnect, btn6;
+    Button btn1, btn2, btn3, btn4, btn5, btnDisconnect, btn6, btn7;
     TextView lumn;
+    EditText input;
 
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth = null;
@@ -59,7 +61,10 @@ public class DashboardFragment extends Fragment {
         btn3 = getView().findViewById(R.id.button5);
         btn4 = getView().findViewById(R.id.button6);
         btn5 = getView().findViewById(R.id.button7);
-        btn6 = getView().findViewById(R.id.button8);
+        btn6 = getView().findViewById(R.id.recBtn);
+        btn7 = getView().findViewById(R.id.sendBtn);
+        input = getView().findViewById(R.id.editText);
+
         btnDisconnect = getView().findViewById(R.id.button4);
         lumn = getView().findViewById(R.id.textView2);
 
@@ -78,6 +83,8 @@ public class DashboardFragment extends Fragment {
         btnDisconnect.setOnClickListener(v -> Disconnect());
 
         btn6.setOnClickListener(v -> receiveSignal());
+
+        btn7.setOnClickListener(v -> sendSignal(Integer.parseInt(input.getText().toString())));
     }
 
     private void sendSignal(int number)
