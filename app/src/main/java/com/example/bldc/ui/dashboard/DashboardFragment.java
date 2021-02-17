@@ -98,18 +98,20 @@ public class DashboardFragment extends Fragment {
 
     private void receiveSignal()
     {
+        int rec = 0;
         if ( btSocket != null )
         {
             try
             {
-                int rec = btSocket.getInputStream().read();
-                lumn.setText(rec);
+                rec = btSocket.getInputStream().read();
             }
             catch (IOException e)
             {
                 msg("Error");
             }
         }
+
+        lumn.setText(String.valueOf(rec));
     }
 
     private void Disconnect () {
