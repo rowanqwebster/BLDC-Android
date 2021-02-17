@@ -30,7 +30,7 @@ public class DashboardFragment extends Fragment {
     private DashboardViewModel dashboardViewModel;
     private String address;
 
-    Button btn1, btn2, btn3, btn4, btn5, btnDisconnect;
+    Button btn1, btn2, btn3, btn4, btn5, btnDisconnect, btn6;
     TextView lumn;
 
     private ProgressDialog progress;
@@ -54,67 +54,59 @@ public class DashboardFragment extends Fragment {
 
         address = getArguments().getString(HomeFragment.EXTRA_ADDRESS);
 
-        Toast.makeText(getActivity(), "Hi there", Toast.LENGTH_LONG).show();
-
-        btn1 = (Button) getView().findViewById(R.id.button2);
-        btn2 = (Button) getView().findViewById(R.id.button3);
-        btn3 = (Button) getView().findViewById(R.id.button5);
-        btn4 = (Button) getView().findViewById(R.id.button6);
-        btn5 = (Button) getView().findViewById(R.id.button7);
-        btnDisconnect = (Button) getView().findViewById(R.id.button4);
-        lumn = (TextView) getView().findViewById(R.id.textView2);
+        btn1 = getView().findViewById(R.id.button2);
+        btn2 = getView().findViewById(R.id.button3);
+        btn3 = getView().findViewById(R.id.button5);
+        btn4 = getView().findViewById(R.id.button6);
+        btn5 = getView().findViewById(R.id.button7);
+        btn6 = getView().findViewById(R.id.button8);
+        btnDisconnect = getView().findViewById(R.id.button4);
+        lumn = getView().findViewById(R.id.textView2);
 
         new ConnectBT().execute();
 
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                sendSignal(13);
-            }
-        });
+        btn1.setOnClickListener(v -> sendSignal(13));
 
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                sendSignal(22);
-            }
-        });
+        btn2.setOnClickListener(v -> sendSignal(22));
 
-        btn3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                sendSignal(46);
-            }
-        });
+        btn3.setOnClickListener(v -> sendSignal(46));
 
-        btn4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                sendSignal(96);
-            }
-        });
+        btn4.setOnClickListener(v -> sendSignal(96));
 
-        btn5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                sendSignal(189);
-            }
-        });
+        btn5.setOnClickListener(v -> sendSignal(189));
 
-        btnDisconnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                Disconnect();
-            }
-        });
+        btnDisconnect.setOnClickListener(v -> Disconnect());
+
+        btn6.setOnClickListener(v -> receiveSignal());
     }
 
-    private void sendSignal ( int number ) {
+    private void sendSignal(int number)
+    {
         msg("Sending: " + number);
-        if ( btSocket != null ) {
-            try {
+        if ( btSocket != null )
+        {
+            try
+            {
                 btSocket.getOutputStream().write(number);
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
+                msg("Error");
+            }
+        }
+    }
+
+    private void receiveSignal()
+    {
+        if ( btSocket != null )
+        {
+            try
+            {
+                int rec = btSocket.getInputStream().read();
+                lumn.setText(rec);
+            }
+            catch (IOException e)
+            {
                 msg("Error");
             }
         }
@@ -149,8 +141,8 @@ public class DashboardFragment extends Fragment {
             try {
                 if ( btSocket==null || !isBtConnected ) {
                     myBluetooth = BluetoothAdapter.getDefaultAdapter();
-                    BluetoothDevice dispositivo = myBluetooth.getRemoteDevice(address);
-                    btSocket = dispositivo.createInsecureRfcommSocketToServiceRecord(myUUID);
+                    BluetoothDevice device = myBluetooth.getRemoteDevice(address);
+                    btSocket = device.createInsecureRfcommSocketToServiceRecord(myUUID);
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
                     btSocket.connect();
                 }
