@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/insecure_connect_scan"
+        android:icon="@drawable/ic_baseline_bluetooth_searching_24"
+        android:title="@string/insecure_connect"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/discoverable"
+        android:title="Settings"
+        app:showAsAction="never" />
+</menu>
