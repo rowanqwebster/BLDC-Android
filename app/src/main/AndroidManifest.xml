@@ -4,8 +4,10 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <!-- If your app targets Android 9 or lower, you can declare
-         ACCESS_COARSE_LOCATION instead. -->
+    <!--
+ If your app targets Android 9 or lower, you can declare
+         ACCESS_COARSE_LOCATION instead.
+    -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -15,6 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BLDC">
+        <activity android:name=".SettingsActivity"
+            android:label="Settings"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -24,12 +33,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/select_device"
-            android:theme="@style/Theme.AppCompat.Dialog"/>
+            android:theme="@style/Theme.AppCompat.Dialog" />
     </application>
 
 </manifest>

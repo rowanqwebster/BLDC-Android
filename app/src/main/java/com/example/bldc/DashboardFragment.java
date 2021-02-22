@@ -136,6 +136,16 @@ public class DashboardFragment extends Fragment {
                 startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
                 return true;
         }
+        else if (item.getItemId() == R.id.action_settings)
+        {
+            Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
+            startActivity(settingsIntent);
+            return true;
+        }
+        else if (item.getItemId() == R.id.action_disconnect){
+            mBTService.stop();
+            return true;
+        }
         return false;
     }
 
@@ -149,6 +159,29 @@ public class DashboardFragment extends Fragment {
         mConversationView = view.findViewById(R.id.in);
         mOutEditText = view.findViewById(R.id.edit_text_out);
         mSendButton = view.findViewById(R.id.button_send);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CONNECT_DEVICE_INSECURE:
+                // When DeviceListActivity returns with a device to connect
+                if (resultCode == Activity.RESULT_OK) {
+                    connectDevice(data);
+                }
+                break;
+            case REQUEST_ENABLE_BT:
+                // When the request to enable Bluetooth returns
+                if (resultCode == Activity.RESULT_OK) {
+                    // Bluetooth is now enabled, so set up a chat session
+                    setupBT();
+                } else {
+                    // User did not enable Bluetooth or an error occurred
+                    Log.d(TAG, "BT not enabled");
+                    Toast.makeText(getActivity(), R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
+                }
+        }
     }
 
     /**
@@ -315,28 +348,6 @@ public class DashboardFragment extends Fragment {
         }
     };
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CONNECT_DEVICE_INSECURE:
-                // When DeviceListActivity returns with a device to connect
-                if (resultCode == Activity.RESULT_OK) {
-                    connectDevice(data);
-                }
-                break;
-            case REQUEST_ENABLE_BT:
-                // When the request to enable Bluetooth returns
-                if (resultCode == Activity.RESULT_OK) {
-                    // Bluetooth is now enabled, so set up a chat session
-                    setupBT();
-                } else {
-                    // User did not enable Bluetooth or an error occurred
-                    Log.d(TAG, "BT not enabled");
-                    Toast.makeText(getActivity(), R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
-                }
-        }
-    }
-
     /**
      * Establish connection with other device
      *
@@ -350,7 +361,4 @@ public class DashboardFragment extends Fragment {
         // Attempt to connect to the device
         mBTService.connect(device);
     }
-
-
-
 }

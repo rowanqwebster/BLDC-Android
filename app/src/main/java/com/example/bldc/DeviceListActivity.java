@@ -141,8 +141,8 @@ public class DeviceListActivity extends AppCompatActivity
     /**
      * The on-click listener for all devices in the ListViews
      */
-    private final AdapterView.OnItemClickListener mDeviceClickListener
-            = new AdapterView.OnItemClickListener() {
+    private final AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
+        @Override
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
 
             // Get the device MAC address, which is the last 17 chars in the View

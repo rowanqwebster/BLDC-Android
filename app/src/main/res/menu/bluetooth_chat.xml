@@ -9,7 +9,12 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/discoverable"
+        android:id="@+id/action_settings"
         android:title="Settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_disconnect"
+        android:title="Disconnect"
         app:showAsAction="never" />
 </menu>

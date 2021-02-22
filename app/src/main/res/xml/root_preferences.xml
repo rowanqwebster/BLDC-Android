@@ -4,11 +4,11 @@
     <PreferenceCategory
         android:title="@string/messages_header">
         <SwitchPreferenceCompat
-            android:key="signature"
+            android:key="vreg"
             android:title="@string/signature_title"
             />
         <EditTextPreference
-            android:dependency="signature"
+            android:dependency="vreg"
             android:defaultValue="test"
             android:entries="@array/reply_entries"
             android:entryValues="@array/reply_values"
@@ -20,11 +20,11 @@
     <PreferenceCategory
         android:title="@string/sync_header">
         <SwitchPreferenceCompat
-            android:key="signature"
+            android:key="preg"
             android:title="@string/sync_title"
             />
         <EditTextPreference
-            android:dependency="signature"
+            android:dependency="preg"
             android:defaultValue="test"
             android:entries="@array/reply_entries"
             android:entryValues="@array/reply_values"
