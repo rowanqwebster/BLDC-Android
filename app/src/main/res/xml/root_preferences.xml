@@ -4,15 +4,13 @@
     <PreferenceCategory
         android:title="@string/messages_header">
         <SwitchPreferenceCompat
-            android:key="vreg"
+            android:key="voltage_limit_toggle"
             android:title="@string/signature_title"
             />
         <EditTextPreference
-            android:dependency="vreg"
-            android:defaultValue="test"
-            android:entries="@array/reply_entries"
-            android:entryValues="@array/reply_values"
-            android:key="reply"
+            android:dependency="voltage_limit_toggle"
+            android:defaultValue="20"
+            android:key="voltage_limit"
             android:title="@string/reply_title"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
@@ -20,15 +18,13 @@
     <PreferenceCategory
         android:title="@string/sync_header">
         <SwitchPreferenceCompat
-            android:key="preg"
+            android:key="power_limit_toggle"
             android:title="@string/sync_title"
             />
         <EditTextPreference
-            android:dependency="preg"
-            android:defaultValue="test"
-            android:entries="@array/reply_entries"
-            android:entryValues="@array/reply_values"
-            android:key="reply"
+            android:dependency="power_limit_toggle"
+            android:defaultValue="100"
+            android:key="power_limit"
             android:title="@string/attachment_title"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>

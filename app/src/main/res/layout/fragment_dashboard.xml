@@ -22,7 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:hint="Send message..."/>
 
         <Button
             android:id="@+id/button_send"
