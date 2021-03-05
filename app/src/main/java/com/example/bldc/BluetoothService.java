@@ -331,13 +331,13 @@ public class BluetoothService
             while (mState == STATE_CONNECTED)
             {
                 try {
-                    if (mmInStream.available() > 0) {
+                    //if (mmInStream.available() > 0) {
                         bytes = mmInStream.read(buffer);
-                        mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
-                    }
-                    else {
-                        SystemClock.sleep(100);
-                    }
+                        mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer.clone()).sendToTarget();
+                    //}
+                    //else {
+                    //    SystemClock.sleep(100);
+                    //}
                 }
                 catch (IOException e){
                     Log.e(TAG, "disconnected.", e);
