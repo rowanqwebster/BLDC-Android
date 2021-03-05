@@ -30,6 +30,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import java.util.StringTokenizer;
+
 public class DashboardFragment extends Fragment {
 
     private final String TAG = "DashboardFragment";
@@ -295,7 +297,7 @@ public class DashboardFragment extends Fragment {
         }
     }
 
-    private String test = "";
+    private StringBuffer test = new StringBuffer(1024);
 
     /**
      * The Handler that gets information back from the BluetoothChatService
@@ -330,10 +332,11 @@ public class DashboardFragment extends Fragment {
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
-                    test += readMessage;
-                    if (readMessage == "$") {
-                        mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
-                        test = "";
+                    test.append(readMessage);
+                    int index = test.indexOf("&");
+                    if (index > 0) {
+                        mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + test.substring(0,index));
+                        test.delete(0,index);
                     }
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
