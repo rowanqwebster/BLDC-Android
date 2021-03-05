@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.IOException;
@@ -329,9 +330,14 @@ public class BluetoothService
 
             while (mState == STATE_CONNECTED)
             {
-                try{
-                    bytes = mmInStream.read(buffer);
-                    mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                try {
+                    if (mmInStream.available() > 0) {
+                        bytes = mmInStream.read(buffer);
+                        mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                    }
+                    else {
+                        SystemClock.sleep(100);
+                    }
                 }
                 catch (IOException e){
                     Log.e(TAG, "disconnected.", e);
