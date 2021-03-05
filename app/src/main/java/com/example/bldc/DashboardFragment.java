@@ -336,7 +336,7 @@ public class DashboardFragment extends Fragment {
                     int index = test.indexOf("&");
                     if (index > 0) {
                         mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + test.substring(0,index));
-                        test.delete(0,index);
+                        test.delete(0,index+1);
                     }
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
