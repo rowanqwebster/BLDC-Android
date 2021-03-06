@@ -161,6 +161,19 @@ public class DashboardFragment extends Fragment {
         mConversationView = view.findViewById(R.id.in);
         mOutEditText = view.findViewById(R.id.edit_text_out);
         mSendButton = view.findViewById(R.id.button_send);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                int index = test.indexOf("&");
+                if (index > 0) {
+                    mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + test.substring(0, index));
+                    test.delete(0, index + 1);
+                }
+                handler.postDelayed(this, 500);
+            }
+        };
     }
 
     @Override
@@ -333,11 +346,6 @@ public class DashboardFragment extends Fragment {
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     test.append(readMessage);
-                    int index = test.indexOf("&");
-                    if (index > 0) {
-                        mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + test.substring(0,index));
-                        test.delete(0,index+1);
-                    }
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
