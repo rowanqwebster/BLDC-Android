@@ -21,15 +21,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import java.util.Random;
 import java.util.StringTokenizer;
 
 public class DashboardFragment extends Fragment {
@@ -126,7 +129,7 @@ public class DashboardFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.bluetooth_chat, menu);
     }
 
@@ -161,19 +164,17 @@ public class DashboardFragment extends Fragment {
         mConversationView = view.findViewById(R.id.in);
         mOutEditText = view.findViewById(R.id.edit_text_out);
         mSendButton = view.findViewById(R.id.button_send);
+        ProgressBar mProgressBar = view.findViewById(R.id.progress);
+        Random r = new Random();
 
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
             @Override
             public void run() {
-                int index = test.indexOf("&");
-                if (index > 0) {
-                    mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + test.substring(0, index));
-                    test.delete(0, index + 1);
-                }
+                mProgressBar.setProgress(r.nextInt(100));
                 handler.postDelayed(this, 500);
             }
-        };
+        });
     }
 
     @Override
@@ -310,7 +311,7 @@ public class DashboardFragment extends Fragment {
         }
     }
 
-    private StringBuffer test = new StringBuffer(1024);
+
 
     /**
      * The Handler that gets information back from the BluetoothChatService
@@ -342,10 +343,9 @@ public class DashboardFragment extends Fragment {
                     mConversationArrayAdapter.add("Me:  " + writeMessage);
                     break;
                 case Constants.MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
+                    String readMessage = (String) msg.obj;
                     // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    test.append(readMessage);
+                    mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
