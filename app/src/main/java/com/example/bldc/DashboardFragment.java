@@ -172,7 +172,7 @@ public class DashboardFragment extends Fragment {
             @Override
             public void run() {
                 mProgressBar.setProgress(r.nextInt(100));
-                handler.postDelayed(this, 500);
+                handler.postDelayed(this, 50);
             }
         });
     }
