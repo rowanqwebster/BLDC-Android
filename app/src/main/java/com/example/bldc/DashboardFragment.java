@@ -48,6 +48,8 @@ public class DashboardFragment extends Fragment {
     private ListView mConversationView;
     private EditText mOutEditText;
     private Button mSendButton;
+    private ProgressBar mPowerProgress;
+    private TextView mPowerIndicator;
 
     /**
      * Name of the connected device
@@ -164,17 +166,8 @@ public class DashboardFragment extends Fragment {
         mConversationView = view.findViewById(R.id.in);
         mOutEditText = view.findViewById(R.id.edit_text_out);
         mSendButton = view.findViewById(R.id.button_send);
-        ProgressBar mProgressBar = view.findViewById(R.id.progress);
-        Random r = new Random();
-
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                mProgressBar.setProgress(r.nextInt(100));
-                handler.postDelayed(this, 50);
-            }
-        });
+        mPowerProgress = view.findViewById(R.id.powerProgress);
+        mPowerIndicator = view.findViewById(R.id.powerInd);
     }
 
     @Override
@@ -345,6 +338,7 @@ public class DashboardFragment extends Fragment {
                 case Constants.MESSAGE_READ:
                     String readMessage = (String) msg.obj;
                     // construct a string from the valid bytes in the buffer
+                    parseData(readMessage);
                     mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
@@ -376,4 +370,27 @@ public class DashboardFragment extends Fragment {
         // Attempt to connect to the device
         mBTService.connect(device);
     }
+
+    private void parseData(String input)
+    {
+        StringTokenizer token = new StringTokenizer(input, "=");
+        if (token.countTokens() == 2)
+        {
+            String key = token.nextToken();
+            String val = token.nextToken();
+            switch (key) {
+                case "pwr":
+                {
+                    mPowerIndicator.setText(val + "W");
+                    mPowerProgress.setProgress(Integer.parseInt(val));
+                }
+            }
+        }
+        else
+        {
+            Log.d(TAG, "Received non-parsable information from MCU");
+        }
+    }
+
+
 }
