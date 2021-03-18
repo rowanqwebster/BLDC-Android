@@ -32,7 +32,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import java.util.Random;
 import java.util.StringTokenizer;
 
 public class DashboardFragment extends Fragment {
@@ -379,11 +378,14 @@ public class DashboardFragment extends Fragment {
             String key = token.nextToken();
             String val = token.nextToken();
             switch (key) {
-                case "pwr":
-                {
-                    mPowerIndicator.setText(val + "W");
-                    mPowerProgress.setProgress(Integer.parseInt(val));
-                }
+                case Constants.POWER:
+                    mPowerIndicator.setText(getString(R.string.power_indicator, val));
+                    mPowerProgress.setProgress((int)Float.parseFloat(val));
+                    break;
+                case Constants.CURRENT:
+                    break;
+                default:
+                    Log.d(TAG,"Unexpected key value: " + key);
             }
         }
         else

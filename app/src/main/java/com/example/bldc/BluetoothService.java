@@ -332,11 +332,13 @@ public class BluetoothService
             {
                 try {
                     bytes = mmInStream.read(buffer);
-                    String readMessage = new String(buffer, 0, bytes);
-                    stringBuilder.append(readMessage);
+                    String partialMessage = new String(buffer, 0, bytes);
+                    stringBuilder.append(partialMessage);
                     while (stringBuilder.indexOf("&") > 0) {
                         int index = stringBuilder.indexOf("&");
-                        mHandler.obtainMessage(Constants.MESSAGE_READ, -1, -1, stringBuilder.substring(0, index)).sendToTarget();
+                        String readMessage = stringBuilder.substring(0, index);
+                        mHandler.obtainMessage(Constants.MESSAGE_READ, -1, -1, readMessage).sendToTarget();
+                        Log.i(TAG, "Received string: " + readMessage);
                         stringBuilder.delete(0, index + 1);
                     }
                 }

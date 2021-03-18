@@ -11,4 +11,7 @@ public interface Constants {
     String DEVICE_NAME = "device_name";
     String TOAST = "toast";
 
+    String POWER = "pwr";
+    String CURRENT = "crnt";
+
 }
