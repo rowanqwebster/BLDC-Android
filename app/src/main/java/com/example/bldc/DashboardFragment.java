@@ -249,7 +249,7 @@ public class DashboardFragment extends Fragment {
 
         // Check that there's actually something to send
         if (message.length() > 0) {
-            message = "pwr=" + message;
+            message = "pwr=" + message + "&";
             // Get the message bytes and tell the BluetoothChatService to write
             byte[] send = message.getBytes();
             mBTService.write(send);
