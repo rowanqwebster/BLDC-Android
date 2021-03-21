@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingHorizontal="10dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Speed:\n100kph"
+            android:textSize="20sp"
+
+            app:layout_constraintBottom_toBottomOf="@+id/progress_circular"
+            app:layout_constraintEnd_toEndOf="@+id/progress_circular"
+            app:layout_constraintStart_toStartOf="@+id/progress_circular"
+            app:layout_constraintTop_toTopOf="@+id/progress_circular" />
+
+        <ProgressBar
+            android:id="@+id/progress_circular"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_shape"
+            android:indeterminateOnly="false"
+            android:max="100"
+            android:progress="50"
+            android:progressDrawable="@drawable/circle_progress_bar"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
         android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -16,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:text="Current Power:"
+            android:text="Power:"
             android:textSize="20sp"
             android:gravity="start|center"
             />
@@ -26,7 +68,6 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:text="20W"
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="end|center"
@@ -34,7 +75,7 @@
 
     </LinearLayout>
 
-    <ProgressBar
+            <ProgressBar
         android:id="@+id/powerProgress"
         android:layout_width="match_parent"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
@@ -44,7 +85,7 @@
         android:max="100"
         />
 
-    <LinearLayout
+            <LinearLayout
         android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -55,16 +96,16 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:text="Current Voltage:"
+            android:text="Voltage:"
             android:textSize="20sp"
             android:gravity="start|center"
             />
 
         <TextView
+            android:id="@+id/voltageInd"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:text="20V"
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="end|center"
@@ -72,8 +113,8 @@
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progress2"
+            <ProgressBar
+        android:id="@+id/voltageProgress"
         android:layout_width="match_parent"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_height="40dp"
@@ -82,7 +123,7 @@
         android:max="100"
         />
 
-    <LinearLayout
+            <LinearLayout
         android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -93,16 +134,16 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:text="Current Voltage:"
+            android:text="Current:"
             android:textSize="20sp"
             android:gravity="start|center"
             />
 
         <TextView
+            android:id="@+id/currentInd"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:text="20V"
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="end|center"
@@ -110,8 +151,8 @@
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progress3"
+            <ProgressBar
+        android:id="@+id/currentProgress"
         android:layout_width="match_parent"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_height="40dp"
@@ -120,17 +161,9 @@
         android:max="100"
         />
 
-    <ProgressBar
-        android:id="@+id/progress_circular"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:indeterminateOnly="false"
-        android:progress="50"
-        android:max="100"
-        android:progressDrawable="@drawable/circle_progress_bar"
-        android:background="@drawable/circle_shape"
-        />
+        </LinearLayout>
+
+    </ScrollView>
 
     <ListView
         android:id="@+id/in"
@@ -151,7 +184,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="1"
-            android:hint="Send message..."/>
+            android:hint="Send test power limit..."/>
 
         <Space
             android:layout_width="5dp"

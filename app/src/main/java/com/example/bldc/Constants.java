@@ -13,5 +13,7 @@ public interface Constants {
 
     String POWER = "pwr";
     String CURRENT = "crnt";
+    String VOLTAGE = "batt vlt";
+    String SPEED = "spd";
 
 }

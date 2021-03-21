@@ -49,6 +49,10 @@ public class DashboardFragment extends Fragment {
     private Button mSendButton;
     private ProgressBar mPowerProgress;
     private TextView mPowerIndicator;
+    private ProgressBar mVoltageProgress;
+    private TextView mVoltageIndicator;
+    private ProgressBar mCurrentProgress;
+    private TextView mCurrentIndicator;
 
     /**
      * Name of the connected device
@@ -148,7 +152,8 @@ public class DashboardFragment extends Fragment {
             startActivity(settingsIntent);
             return true;
         }
-        else if (item.getItemId() == R.id.action_disconnect){
+        else if (item.getItemId() == R.id.action_disconnect)
+        {
             mBTService.stop();
             return true;
         }
@@ -165,8 +170,13 @@ public class DashboardFragment extends Fragment {
         mConversationView = view.findViewById(R.id.in);
         mOutEditText = view.findViewById(R.id.edit_text_out);
         mSendButton = view.findViewById(R.id.button_send);
+
         mPowerProgress = view.findViewById(R.id.powerProgress);
         mPowerIndicator = view.findViewById(R.id.powerInd);
+        mVoltageProgress = view.findViewById(R.id.voltageProgress);
+        mVoltageIndicator = view.findViewById(R.id.voltageInd);
+        mCurrentProgress = view.findViewById(R.id.currentProgress);
+        mCurrentIndicator = view.findViewById(R.id.currentInd);
     }
 
     @Override
@@ -239,6 +249,7 @@ public class DashboardFragment extends Fragment {
 
         // Check that there's actually something to send
         if (message.length() > 0) {
+            message = "pwr=" + message;
             // Get the message bytes and tell the BluetoothChatService to write
             byte[] send = message.getBytes();
             mBTService.write(send);
@@ -383,6 +394,12 @@ public class DashboardFragment extends Fragment {
                     mPowerProgress.setProgress((int)Float.parseFloat(val));
                     break;
                 case Constants.CURRENT:
+                    mCurrentIndicator.setText(getString(R.string.current_indicator, val));
+                    mCurrentProgress.setProgress((int)Float.parseFloat(val));
+                    break;
+                case Constants.VOLTAGE:
+                    mVoltageIndicator.setText(getString(R.string.voltage_indicator, val));
+                    mVoltageProgress.setProgress((int)Float.parseFloat(val));
                     break;
                 default:
                     Log.d(TAG,"Unexpected key value: " + key);

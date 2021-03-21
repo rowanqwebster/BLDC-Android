@@ -56,5 +56,7 @@
     <string name="sample_show_log">Show Log</string>
     <string name="sample_hide_log">Hide Log</string>
     <string name="power_indicator">%1$s W</string>
+    <string name="voltage_indicator">%1$s V</string>
+    <string name="current_indicator">%1$s A</string>
 
 </resources>
