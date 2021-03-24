@@ -117,7 +117,8 @@ public class DashboardFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         if (mMonitorService != null) {
-            mMonitorService.stop();
+            getActivity().unbindService(myConnection);
+            getActivity().stopService(new Intent(getActivity(), MonitorService.class));
         }
     }
 
