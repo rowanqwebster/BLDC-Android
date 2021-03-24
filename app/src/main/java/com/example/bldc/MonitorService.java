@@ -78,6 +78,11 @@ public class MonitorService extends Service {
         mHandler = handler;
     }
 
+    public Handler getHandler()
+    {
+        return mHandler;
+    }
+
     /**
      * Update UI title according to the current state of the chat connection
      */
