@@ -7,7 +7,6 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/sample_content_fragment"
-        android:name="com.example.bldc.DashboardFragment"
         android:layout_weight="2"
         android:layout_width="match_parent"
         android:layout_height="0px" />

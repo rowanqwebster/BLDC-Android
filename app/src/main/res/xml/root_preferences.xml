@@ -12,6 +12,7 @@
             android:defaultValue="20"
             android:key="voltage_limit"
             android:title="@string/reply_title"
+            android:inputType="number"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
@@ -26,6 +27,7 @@
             android:defaultValue="100"
             android:key="power_limit"
             android:title="@string/attachment_title"
+            android:inputType="number"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
