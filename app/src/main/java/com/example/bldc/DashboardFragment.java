@@ -202,7 +202,12 @@ public class DashboardFragment extends Fragment {
                 double power = dbHelper.getInfo(Constants.POWER);
                 mPowerProgress.setProgress((int)power);
                 mPowerIndicator.setText(getString(R.string.power_indicator, power));
-
+                double current = dbHelper.getInfo(Constants.CURRENT);
+                mCurrentProgress.setProgress((int)current);
+                mCurrentIndicator.setText(getString(R.string.current_indicator, current));
+                double voltage = dbHelper.getInfo(Constants.BATTERY_VOLT);
+                mVoltageProgress.setProgress((int)voltage);
+                mVoltageIndicator.setText(getString(R.string.voltage_indicator, voltage));
 
                 handler.postDelayed(this,100);
             }
