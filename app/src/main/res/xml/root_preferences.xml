@@ -2,33 +2,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:title="@string/messages_header">
+        android:title="@string/current_header">
         <SwitchPreferenceCompat
-            android:key="voltage_limit_toggle"
-            android:title="@string/signature_title"
+            android:key="current_toggle"
+            android:title="@string/current_toggle_title"
             />
         <EditTextPreference
-            android:dependency="voltage_limit_toggle"
+            android:dependency="current_toggle"
             android:defaultValue="20"
             android:key="voltage_limit"
-            android:title="@string/reply_title"
+            android:title="@string/current_limit_title"
             android:inputType="number"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/sync_header">
+        android:title="@string/power_header">
         <SwitchPreferenceCompat
-            android:key="power_limit_toggle"
-            android:title="@string/sync_title"
+            android:key="power_toggle"
+            android:title="@string/power_toggle_title"
             />
         <EditTextPreference
-            android:dependency="power_limit_toggle"
+            android:dependency="power_toggle"
             android:defaultValue="100"
             android:key="power_limit"
-            android:title="@string/attachment_title"
+            android:title="@string/power_limit_title"
             android:inputType="number"
             app:useSimpleSummaryProvider="true" />
+        <SeekBarPreference
+            android:dependency="power_toggle"
+            android:title="@string/power_limit_title"
+            app:showSeekBarValue="true"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

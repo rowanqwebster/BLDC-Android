@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 public class MonitorService extends Service {
@@ -36,6 +37,8 @@ public class MonitorService extends Service {
     public static final int STATE_CONNECTING = 1; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 2;  // now connected to a remote device
 
+    private DBHelper dbHelper;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -43,6 +46,8 @@ public class MonitorService extends Service {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mNewState = mState;
+        dbHelper = new DBHelper(this);
+        dbHelper.resetInfo();
     }
 
     @Nullable
@@ -186,7 +191,10 @@ public class MonitorService extends Service {
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
-            if (mState != STATE_CONNECTED) return;
+            if (mState != STATE_CONNECTED) {
+                Log.d(TAG, "Could not write, not connected");
+                return;
+            }
             r = mConnectedThread;
         }
         // Perform the write unsynchronized
@@ -349,10 +357,11 @@ public class MonitorService extends Service {
                     bytes = mmInStream.read(buffer);
                     String partialMessage = new String(buffer, 0, bytes);
                     stringBuilder.append(partialMessage);
-                    while (stringBuilder.indexOf("&") > 0) {
+                    while (stringBuilder.indexOf("&") >= 0) {
                         int index = stringBuilder.indexOf("&");
                         String readMessage = stringBuilder.substring(0, index);
                         mHandler.obtainMessage(Constants.MESSAGE_READ, -1, -1, readMessage).sendToTarget();
+                        updateDB(readMessage);
                         Log.i(TAG, "Received string: " + readMessage);
                         stringBuilder.delete(0, index + 1);
                     }
@@ -365,11 +374,32 @@ public class MonitorService extends Service {
             }
         }
 
+        private void updateDB(String message){
+            StringTokenizer token = new StringTokenizer(message, "=");
+            if (token.countTokens() == 2)
+            {
+                String key = token.nextToken();
+                String val = token.nextToken();
+                try {
+                    float fVal = Float.parseFloat(val);
+                    dbHelper.setInfo(key, fVal);
+                }
+                catch (NumberFormatException e)
+                {
+                    Log.d(TAG, "Invalid value formatting");
+                }
+            }
+            else
+            {
+                Log.d(TAG, "Received non-parsable information from MCU");
+            }
+        }
+
         //write method
         public void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
-                mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();//write bytes over BT connection via outstream
+                mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer).sendToTarget(); //write bytes over BT connection via out stream
             } catch (IOException e) {
                 //if you cannot write, close the application
                 Log.d("DEBUG BT", "UNABLE TO READ/WRITE " + e.toString());

@@ -1,32 +1,30 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">BLDC Monitor</string>
     <string name="title_home">Information</string>
-    <string name="title_dashboard">Configuration</string>
-    <string name="title_notifications">Notifications</string>
     <string name="power_action">Power</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Voltage regulation</string>
-    <string name="sync_header">Power regulation</string>
+    <string name="current_header">Current regulation</string>
+    <string name="power_header">Power regulation</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Voltage limit</string>
-    <string name="reply_title">Voltage limit [V]</string>
+    <string name="current_toggle_title">Current limit</string>
+    <string name="current_limit_title">Current limit [A]</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Power limit</string>
-    <string name="attachment_title">Power limit [W]</string>
+    <string name="power_toggle_title">Power limit</string>
+    <string name="power_limit_title">Power limit [W]</string>
 
     <!--  BluetoothChat -->
     <string name="send">Send</string>
     <string name="not_connected">You are not connected to a device</string>
-    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Exiting...</string>
-    <string name="title_connecting">Connecting...</string>
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Exiting…</string>
+    <string name="title_connecting">Connecting…</string>
     <string name="title_connected_to">Connected to <xliff:g id="device_name">%1$s</xliff:g></string>
     <string name="title_not_connected">Not connected</string>
 
     <!--  DeviceListActivity -->
-    <string name="scanning">Scanning for devices...</string>
+    <string name="scanning">Scanning for devices…</string>
     <string name="select_device">Select a device to connect</string>
     <string name="none_paired">No devices have been paired</string>
     <string name="none_found">No devices found</string>
@@ -35,28 +33,13 @@
     <string name="button_scan">Scan for devices</string>
 
     <!-- Options Menu -->
-    <string name="secure_connect">Connect a device - Secure</string>
     <string name="insecure_connect">Connect a device</string>
     <string name="discoverable">Make discoverable</string>
-    <string name="intro_message">
-        <![CDATA[
 
-
-            This application allows two Android devices to carry out two-way text chat over
-            Bluetooth. It demonstrates all the fundamental Bluetooth API capabilities, such as:
-              (1) Scanning for other Bluetooth devices
-              (2) Querying the local Bluetooth adapter for paired Bluetooth devices
-              (3) Establishing RFCOMM channels/sockets
-              (4) Connecting to a remote device
-              (5) Transferring data over Bluetooth
-
-
-        ]]>
-    </string>
-    <string name="sample_show_log">Show Log</string>
-    <string name="sample_hide_log">Hide Log</string>
-    <string name="power_indicator">%1$s W</string>
-    <string name="voltage_indicator">%1$s V</string>
-    <string name="current_indicator">%1$s A</string>
+    <string name="power_indicator">%1$d W</string>
+    <string name="voltage_indicator">%1$d V</string>
+    <string name="current_indicator">%1$d A</string>
+    <string name="settings_action">Settings</string>
+    <string name="disconnect_action">Disconnect</string>
 
 </resources>

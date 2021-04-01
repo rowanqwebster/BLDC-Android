@@ -20,22 +20,7 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
-
-        bindService(new Intent(this, MonitorService.class), myConnection, Context.BIND_AUTO_CREATE);
-
     }
 
-    private MonitorService mMonitorService;
-    public ServiceConnection myConnection = new ServiceConnection() {
 
-        public void onServiceConnected(ComponentName className, IBinder binder) {
-            mMonitorService = ((MonitorService.LocalBinder) binder).getService();
-            Object obj = mMonitorService.getHandler();
-            Log.d(TAG,"Connected to monitor service, handler="+obj);
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            Log.d(TAG,"Monitor service disconnected");
-        }
-    };
 }

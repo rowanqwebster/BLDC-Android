@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -166,6 +168,15 @@ public class DashboardFragment extends Fragment {
     }
 
     @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        for (int i = 1; i<menu.size(); i++)
+        {
+            //menu.getItem(i).setEnabled(connected);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_dashboard, container, false);
     }
@@ -182,6 +193,20 @@ public class DashboardFragment extends Fragment {
         mVoltageIndicator = view.findViewById(R.id.voltageInd);
         mCurrentProgress = view.findViewById(R.id.currentProgress);
         mCurrentIndicator = view.findViewById(R.id.currentInd);
+
+        DBHelper dbHelper = new DBHelper(getActivity());
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                double power = dbHelper.getInfo(Constants.POWER);
+                mPowerProgress.setProgress((int)power);
+                mPowerIndicator.setText(getString(R.string.power_indicator, power));
+
+
+                handler.postDelayed(this,100);
+            }
+        });
     }
 
     @Override
@@ -240,11 +265,12 @@ public class DashboardFragment extends Fragment {
     }
 
     private MonitorService mMonitorService;
-    public ServiceConnection myConnection = new ServiceConnection() {
+    private ServiceConnection myConnection = new ServiceConnection() {
 
         public void onServiceConnected(ComponentName className, IBinder binder) {
             mMonitorService = ((MonitorService.LocalBinder) binder).getService();
             mMonitorService.setHandler(mHandler);
+            mMonitorService.stop();
             Log.d(TAG,"Connected to monitor service");
         }
 
@@ -333,8 +359,8 @@ public class DashboardFragment extends Fragment {
         }
     }
 
-
-
+    private boolean connected;
+    
     /**
      * The Handler that gets information back from the BluetoothChatService
      */
@@ -344,9 +370,11 @@ public class DashboardFragment extends Fragment {
             FragmentActivity activity = getActivity();
             switch (msg.what) {
                 case Constants.MESSAGE_STATE_CHANGE:
+                    connected = false;
                     switch (msg.arg1) {
                         case BluetoothService.STATE_CONNECTED:
                             setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
+                            connected = true;
                             mConversationArrayAdapter.clear();
                             break;
                         case BluetoothService.STATE_CONNECTING:
@@ -361,13 +389,13 @@ public class DashboardFragment extends Fragment {
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
                     String writeMessage = new String(writeBuf);
-                    mConversationArrayAdapter.add("Me:  " + writeMessage);
+                    mConversationArrayAdapter.add("Me: " + writeMessage);
                     break;
                 case Constants.MESSAGE_READ:
                     String readMessage = (String) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     parseData(readMessage);
-                    mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
+                    mConversationArrayAdapter.add(mConnectedDeviceName + ": " + readMessage);
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
@@ -406,28 +434,26 @@ public class DashboardFragment extends Fragment {
         {
             String key = token.nextToken();
             String val = token.nextToken();
-            switch (key) {
-                case Constants.POWER:
-                    mPowerIndicator.setText(getString(R.string.power_indicator, val));
-                    mPowerProgress.setProgress((int)Float.parseFloat(val));
-                    break;
-                case Constants.CURRENT:
-                    mCurrentIndicator.setText(getString(R.string.current_indicator, val));
-                    mCurrentProgress.setProgress((int)Float.parseFloat(val));
-                    break;
-                case Constants.VOLTAGE:
-                    mVoltageIndicator.setText(getString(R.string.voltage_indicator, val));
-                    mVoltageProgress.setProgress((int)Float.parseFloat(val));
-                    break;
-                default:
-                    Log.d(TAG,"Unexpected key value: " + key);
-            }
+            //switch (key) {
+            //    case Constants.POWER:
+            //        mPowerIndicator.setText(getString(R.string.power_indicator, val));
+            //        mPowerProgress.setProgress((int)Float.parseFloat(val));
+            //        break;
+            //    case Constants.CURRENT:
+            //        mCurrentIndicator.setText(getString(R.string.current_indicator, val));
+            //        mCurrentProgress.setProgress((int)Float.parseFloat(val));
+            //        break;
+            //    case Constants.BATTERY_VOLT:
+            //        mVoltageIndicator.setText(getString(R.string.voltage_indicator, val));
+            //        mVoltageProgress.setProgress((int)Float.parseFloat(val));
+            //        break;
+            //    default:
+            //        Log.d(TAG,"Unexpected key value: " + key);
+            //}
         }
         else
         {
             Log.d(TAG, "Received non-parsable information from MCU");
         }
     }
-
-
 }

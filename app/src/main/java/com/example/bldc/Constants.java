@@ -11,9 +11,18 @@ public interface Constants {
     String DEVICE_NAME = "device_name";
     String TOAST = "toast";
 
+    String SPEED = "spd";
     String POWER = "pwr";
     String CURRENT = "crnt";
-    String VOLTAGE = "batt vlt";
-    String SPEED = "spd";
+    String CONTROL_TEMP = "cntrl_temp";
+    String BATTERY_VOLT = "batt_vlt";
+    String BATTERY_REM = "batt_rem";
+    String PWM_FREQ = "pwm_freq";
+    String MAX_SPEED = "max_spd";
+    String MAX_POWER_DRAW = "max_pwr_draw";
+    String MAX_CURRENT_DRAW = "max_crnt_draw";
+    String BATTERY_CHEMISTRY = "batt_chem";
+    String DRIVING_MODE = "drive_mode";
+    String THROTTLE_CAL = "thrtl_cal_req";
 
 }
