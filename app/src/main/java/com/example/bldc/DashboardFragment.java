@@ -3,9 +3,15 @@ package com.example.bldc;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.ComponentName;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
@@ -77,7 +83,7 @@ public class DashboardFragment extends Fragment {
     /**
      * Member object for the chat services
      */
-    private BluetoothService mBTService = null;
+    //private BluetoothService mBTService = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,7 +110,7 @@ public class DashboardFragment extends Fragment {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
-        else if (mBTService == null){
+        else if (mMonitorService == null){
             setupBT();
         }
     }
@@ -112,8 +118,9 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mBTService != null) {
-            mBTService.stop();
+        if (mMonitorService != null) {
+            getActivity().unbindService(myConnection);
+            getActivity().stopService(new Intent(getActivity(), MonitorService.class));
         }
     }
 
@@ -124,11 +131,11 @@ public class DashboardFragment extends Fragment {
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-        if (mBTService != null) {
+        if (mMonitorService != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (mBTService.getState() == BluetoothService.STATE_NONE) {
+            if (mMonitorService.getState() == BluetoothService.STATE_NONE) {
                 // Start the Bluetooth chat services
-                mBTService.start();
+                mMonitorService.stop();
             }
         }
     }
@@ -154,10 +161,19 @@ public class DashboardFragment extends Fragment {
         }
         else if (item.getItemId() == R.id.action_disconnect)
         {
-            mBTService.stop();
+            mMonitorService.stop();
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        for (int i = 1; i<menu.size(); i++)
+        {
+            //menu.getItem(i).setEnabled(connected);
+        }
     }
 
     @Override
@@ -177,6 +193,25 @@ public class DashboardFragment extends Fragment {
         mVoltageIndicator = view.findViewById(R.id.voltageInd);
         mCurrentProgress = view.findViewById(R.id.currentProgress);
         mCurrentIndicator = view.findViewById(R.id.currentInd);
+
+        DBHelper dbHelper = new DBHelper(getActivity());
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                double power = dbHelper.getInfo(Constants.POWER);
+                mPowerProgress.setProgress((int)power);
+                mPowerIndicator.setText(getString(R.string.power_indicator, power));
+                double current = dbHelper.getInfo(Constants.CURRENT);
+                mCurrentProgress.setProgress((int)current);
+                mCurrentIndicator.setText(getString(R.string.current_indicator, current));
+                double voltage = dbHelper.getInfo(Constants.BATTERY_VOLT);
+                mVoltageProgress.setProgress((int)voltage);
+                mVoltageIndicator.setText(getString(R.string.voltage_indicator, voltage));
+
+                handler.postDelayed(this,100);
+            }
+        });
     }
 
     @Override
@@ -227,12 +262,27 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        // Initialize the BluetoothChatService to perform bluetooth connections
-        mBTService = new BluetoothService(getActivity(), mHandler);
+        getActivity().startService(new Intent(getActivity(), MonitorService.class));
+        getActivity().bindService(new Intent(getActivity(), MonitorService.class), myConnection, Context.BIND_AUTO_CREATE);
 
         // Initialize the buffer for outgoing messages
         mOutStringBuffer = new StringBuffer();
     }
+
+    private MonitorService mMonitorService;
+    private ServiceConnection myConnection = new ServiceConnection() {
+
+        public void onServiceConnected(ComponentName className, IBinder binder) {
+            mMonitorService = ((MonitorService.LocalBinder) binder).getService();
+            mMonitorService.setHandler(mHandler);
+            mMonitorService.stop();
+            Log.d(TAG,"Connected to monitor service");
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            Log.d(TAG,"Monitor service disconnected");
+        }
+    };
 
     /**
      * Sends a message.
@@ -241,7 +291,7 @@ public class DashboardFragment extends Fragment {
      */
     private void sendMessage(String message) {
         // Check that we're actually connected before trying anything
-        if (mBTService.getState() != BluetoothService.STATE_CONNECTED)
+        if (mMonitorService.getState() != MonitorService.STATE_CONNECTED)
         {
             Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
             return;
@@ -249,10 +299,10 @@ public class DashboardFragment extends Fragment {
 
         // Check that there's actually something to send
         if (message.length() > 0) {
-            message = "pwr=" + message + "&";
+            message = "pwm freq=" + message + "&";
             // Get the message bytes and tell the BluetoothChatService to write
             byte[] send = message.getBytes();
-            mBTService.write(send);
+            mMonitorService.write(send);
 
             // Reset out string buffer to zero and clear the edit text field
             mOutStringBuffer.setLength(0);
@@ -314,8 +364,8 @@ public class DashboardFragment extends Fragment {
         }
     }
 
-
-
+    private boolean connected;
+    
     /**
      * The Handler that gets information back from the BluetoothChatService
      */
@@ -325,15 +375,16 @@ public class DashboardFragment extends Fragment {
             FragmentActivity activity = getActivity();
             switch (msg.what) {
                 case Constants.MESSAGE_STATE_CHANGE:
+                    connected = false;
                     switch (msg.arg1) {
                         case BluetoothService.STATE_CONNECTED:
                             setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
+                            connected = true;
                             mConversationArrayAdapter.clear();
                             break;
                         case BluetoothService.STATE_CONNECTING:
                             setStatus(R.string.title_connecting);
                             break;
-                        case BluetoothService.STATE_LISTEN:
                         case BluetoothService.STATE_NONE:
                             setStatus(R.string.title_not_connected);
                             break;
@@ -343,13 +394,13 @@ public class DashboardFragment extends Fragment {
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
                     String writeMessage = new String(writeBuf);
-                    mConversationArrayAdapter.add("Me:  " + writeMessage);
+                    mConversationArrayAdapter.add("Me: " + writeMessage);
                     break;
                 case Constants.MESSAGE_READ:
                     String readMessage = (String) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     parseData(readMessage);
-                    mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
+                    mConversationArrayAdapter.add(mConnectedDeviceName + ": " + readMessage);
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
@@ -378,7 +429,7 @@ public class DashboardFragment extends Fragment {
         // Get the BluetoothDevice object
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         // Attempt to connect to the device
-        mBTService.connect(device);
+        mMonitorService.connect(device);
     }
 
     private void parseData(String input)
@@ -388,28 +439,26 @@ public class DashboardFragment extends Fragment {
         {
             String key = token.nextToken();
             String val = token.nextToken();
-            switch (key) {
-                case Constants.POWER:
-                    mPowerIndicator.setText(getString(R.string.power_indicator, val));
-                    mPowerProgress.setProgress((int)Float.parseFloat(val));
-                    break;
-                case Constants.CURRENT:
-                    mCurrentIndicator.setText(getString(R.string.current_indicator, val));
-                    mCurrentProgress.setProgress((int)Float.parseFloat(val));
-                    break;
-                case Constants.VOLTAGE:
-                    mVoltageIndicator.setText(getString(R.string.voltage_indicator, val));
-                    mVoltageProgress.setProgress((int)Float.parseFloat(val));
-                    break;
-                default:
-                    Log.d(TAG,"Unexpected key value: " + key);
-            }
+            //switch (key) {
+            //    case Constants.POWER:
+            //        mPowerIndicator.setText(getString(R.string.power_indicator, val));
+            //        mPowerProgress.setProgress((int)Float.parseFloat(val));
+            //        break;
+            //    case Constants.CURRENT:
+            //        mCurrentIndicator.setText(getString(R.string.current_indicator, val));
+            //        mCurrentProgress.setProgress((int)Float.parseFloat(val));
+            //        break;
+            //    case Constants.BATTERY_VOLT:
+            //        mVoltageIndicator.setText(getString(R.string.voltage_indicator, val));
+            //        mVoltageProgress.setProgress((int)Float.parseFloat(val));
+            //        break;
+            //    default:
+            //        Log.d(TAG,"Unexpected key value: " + key);
+            //}
         }
         else
         {
             Log.d(TAG, "Received non-parsable information from MCU");
         }
     }
-
-
 }
