@@ -59,6 +59,10 @@ public class DashboardFragment extends Fragment {
     private TextView mVoltageIndicator;
     private ProgressBar mCurrentProgress;
     private TextView mCurrentIndicator;
+    private ProgressBar mSpeedProgress;
+    private TextView mSpeedIndicator;
+
+    private Handler UIHandler;
 
     /**
      * Name of the connected device
@@ -118,6 +122,7 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        UIHandler.removeCallbacksAndMessages(null);
         if (mMonitorService != null) {
             getActivity().unbindService(myConnection);
             getActivity().stopService(new Intent(getActivity(), MonitorService.class));
@@ -193,12 +198,17 @@ public class DashboardFragment extends Fragment {
         mVoltageIndicator = view.findViewById(R.id.voltageInd);
         mCurrentProgress = view.findViewById(R.id.currentProgress);
         mCurrentIndicator = view.findViewById(R.id.currentInd);
+        mSpeedProgress = view.findViewById(R.id.speed_progress);
+        mSpeedIndicator = view.findViewById(R.id.speed_indicator);
 
         DBHelper dbHelper = new DBHelper(getActivity());
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
+        UIHandler = new Handler(Looper.getMainLooper());
+        UIHandler.post(new Runnable() {
             @Override
             public void run() {
+                double speed = dbHelper.getInfo(Constants.SPEED);
+                mSpeedProgress.setProgress((int)speed);
+                mSpeedIndicator.setText(getString(R.string.speed_indicator, (int)speed));
                 double power = dbHelper.getInfo(Constants.POWER);
                 mPowerProgress.setProgress((int)power);
                 mPowerIndicator.setText(getString(R.string.power_indicator, power));
@@ -209,7 +219,7 @@ public class DashboardFragment extends Fragment {
                 mVoltageProgress.setProgress((int)voltage);
                 mVoltageIndicator.setText(getString(R.string.voltage_indicator, voltage));
 
-                handler.postDelayed(this,100);
+                UIHandler.postDelayed(this,100);
             }
         });
     }
@@ -299,7 +309,7 @@ public class DashboardFragment extends Fragment {
 
         // Check that there's actually something to send
         if (message.length() > 0) {
-            message = "pwm freq=" + message + "&";
+            message = "pwm_freq=" + message + "&";
             // Get the message bytes and tell the BluetoothChatService to write
             byte[] send = message.getBytes();
             mMonitorService.write(send);

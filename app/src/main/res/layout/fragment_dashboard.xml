@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -11,18 +12,31 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/speed_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Speed:\n8900kph"
-            android:textSize="20sp"
+            android:gravity="center"
+            android:text="@string/speed_indicator"
+            android:textSize="100sp"
+            android:textStyle="bold"
 
-            app:layout_constraintBottom_toBottomOf="@+id/progress_circular"
-            app:layout_constraintEnd_toEndOf="@+id/progress_circular"
-            app:layout_constraintStart_toStartOf="@+id/progress_circular"
-            app:layout_constraintTop_toTopOf="@+id/progress_circular" />
+            app:layout_constraintBottom_toBottomOf="@+id/speed_progress"
+            app:layout_constraintEnd_toEndOf="@+id/speed_progress"
+            app:layout_constraintStart_toStartOf="@+id/speed_progress"
+            app:layout_constraintTop_toTopOf="@+id/speed_progress" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="KPH"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/speed_indicator"
+            app:layout_constraintStart_toStartOf="@+id/speed_indicator"
+            app:layout_constraintTop_toBottomOf="@+id/speed_indicator"/>
 
         <ProgressBar
-            android:id="@+id/progress_circular"
+            android:id="@+id/speed_progress"
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_gravity="center"

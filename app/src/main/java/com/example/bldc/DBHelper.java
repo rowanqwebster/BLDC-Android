@@ -3,6 +3,7 @@ package com.example.bldc;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -10,6 +11,9 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 public class DBHelper extends SQLiteOpenHelper {
+
+    private final String TAG = "DBHelper";
+
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "monitorInfo";
     private static final String TABLE_INFO = "info";
@@ -63,17 +67,29 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(key, value);
-        db.update(TABLE_INFO, values, KEY_ID + " = ?", new String[] {"1"});
+        try {
+            db.update(TABLE_INFO, values, KEY_ID + " = ?", new String[]{"1"});
+        }
+        catch (SQLException e)
+        {
+            Log.i(TAG, "Database update failed");
+        }
     }
 
     public double getInfo(String key)
     {
+        double result = -1;
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT " + key + " FROM " + TABLE_INFO, null);
-        if (c.moveToFirst())
-        {
-            return c.getDouble(0);
+        try {
+            Cursor c = db.rawQuery("SELECT " + key + " FROM " + TABLE_INFO, null);
+            if (c.moveToFirst())
+                result = c.getDouble(0);
+            c.close();
         }
-        return -1;
+        catch (SQLException e)
+        {
+            Log.d(TAG,"Database query failed");
+        }
+        return result;
     }
 }
