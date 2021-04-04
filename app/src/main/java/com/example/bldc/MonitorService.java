@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
@@ -398,13 +399,11 @@ public class MonitorService extends Service {
         //write method
         public void write(byte[] buffer) {
             try {
-                mmOutStream.write(buffer);
-                mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer).sendToTarget(); //write bytes over BT connection via out stream
-            } catch (IOException e) {
-                //if you cannot write, close the application
-                Log.d("DEBUG BT", "UNABLE TO READ/WRITE " + e.toString());
-                Log.d("BT SERVICE", "UNABLE TO READ/WRITE, STOPPING SERVICE");
-                stopSelf();
+                mmOutStream.write(buffer);//write bytes over BT connection via out stream
+                mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
+                Log.i(TAG, "Sent string: " + Arrays.toString(buffer));
+            } catch (IOException e){
+                Log.e(TAG, "Exception during write", e);
             }
         }
 

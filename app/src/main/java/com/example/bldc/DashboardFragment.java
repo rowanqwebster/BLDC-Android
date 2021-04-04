@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -38,21 +36,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import java.util.StringTokenizer;
+import org.w3c.dom.Text;
 
 public class DashboardFragment extends Fragment {
 
+    private final Boolean debug = true;
     private final String TAG = "DashboardFragment";
 
     // Intent request codes
-    private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
-    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
-    private static final int REQUEST_ENABLE_BT = 3;
+    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 0;
+    private static final int REQUEST_ENABLE_BT = 1;
 
     // Layout Views
-    private ListView mConversationView;
-    private EditText mOutEditText;
-    private Button mSendButton;
     private ProgressBar mPowerProgress;
     private TextView mPowerIndicator;
     private ProgressBar mVoltageProgress;
@@ -61,6 +56,10 @@ public class DashboardFragment extends Fragment {
     private TextView mCurrentIndicator;
     private ProgressBar mSpeedProgress;
     private TextView mSpeedIndicator;
+    private ProgressBar mTempProgress;
+    private TextView mTempIndicator;
+    private ProgressBar mCapacityProgress;
+    private TextView mCapacityIndicator;
 
     private Handler UIHandler;
 
@@ -70,24 +69,9 @@ public class DashboardFragment extends Fragment {
     private String mConnectedDeviceName = null;
 
     /**
-     * Array adapter for the conversation thread
-     */
-    private ArrayAdapter<String> mConversationArrayAdapter;
-
-    /**
-     * String buffer for outgoing messages
-     */
-    private StringBuffer mOutStringBuffer;
-
-    /**
      * Local Bluetooth adapter
      */
     private BluetoothAdapter mBluetoothAdapter = null;
-
-    /**
-     * Member object for the chat services
-     */
-    //private BluetoothService mBTService = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -177,7 +161,7 @@ public class DashboardFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
         for (int i = 1; i<menu.size(); i++)
         {
-            //menu.getItem(i).setEnabled(connected);
+            menu.getItem(i).setEnabled(connected || debug);
         }
     }
 
@@ -188,16 +172,32 @@ public class DashboardFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mConversationView = view.findViewById(R.id.in);
-        mOutEditText = view.findViewById(R.id.edit_text_out);
-        mSendButton = view.findViewById(R.id.button_send);
+        View powerProgress = view.findViewById(R.id.power_progress);
+        View voltageProgress = view.findViewById(R.id.voltage_progress);
+        View currentProgress = view.findViewById(R.id.current_progress);
+        View tempProgress = view.findViewById(R.id.temp_progress);
+        View capacityProgress = view.findViewById(R.id.capacity_progress);
 
-        mPowerProgress = view.findViewById(R.id.powerProgress);
-        mPowerIndicator = view.findViewById(R.id.powerInd);
-        mVoltageProgress = view.findViewById(R.id.voltageProgress);
-        mVoltageIndicator = view.findViewById(R.id.voltageInd);
-        mCurrentProgress = view.findViewById(R.id.currentProgress);
-        mCurrentIndicator = view.findViewById(R.id.currentInd);
+        ((TextView)powerProgress.findViewById(R.id.progress_label)).setText(getString(R.string.power_label));
+        mPowerProgress = powerProgress.findViewById(R.id.progress);
+        mPowerIndicator = powerProgress.findViewById(R.id.progress_indicator);
+
+        ((TextView)voltageProgress.findViewById(R.id.progress_label)).setText(getString(R.string.voltage_label));
+        mVoltageProgress = voltageProgress.findViewById(R.id.progress);
+        mVoltageIndicator = voltageProgress.findViewById(R.id.progress_indicator);
+
+        ((TextView)currentProgress.findViewById(R.id.progress_label)).setText(getString(R.string.current_label));
+        mCurrentProgress = currentProgress.findViewById(R.id.progress);
+        mCurrentIndicator = currentProgress.findViewById(R.id.progress_indicator);
+
+        ((TextView)tempProgress.findViewById(R.id.progress_label)).setText(getString(R.string.temp_label));
+        mTempProgress = tempProgress.findViewById(R.id.progress);
+        mTempIndicator = tempProgress.findViewById(R.id.progress_indicator);
+
+        ((TextView)capacityProgress.findViewById(R.id.progress_label)).setText(getString(R.string.capacity_label));
+        mCapacityProgress = capacityProgress.findViewById(R.id.progress);
+        mCapacityIndicator = capacityProgress.findViewById(R.id.progress_indicator);
+
         mSpeedProgress = view.findViewById(R.id.speed_progress);
         mSpeedIndicator = view.findViewById(R.id.speed_indicator);
 
@@ -206,18 +206,26 @@ public class DashboardFragment extends Fragment {
         UIHandler.post(new Runnable() {
             @Override
             public void run() {
-                double speed = dbHelper.getInfo(Constants.SPEED);
-                mSpeedProgress.setProgress((int)speed);
-                mSpeedIndicator.setText(getString(R.string.speed_indicator, (int)speed));
-                double power = dbHelper.getInfo(Constants.POWER);
-                mPowerProgress.setProgress((int)power);
-                mPowerIndicator.setText(getString(R.string.power_indicator, power));
-                double current = dbHelper.getInfo(Constants.CURRENT);
-                mCurrentProgress.setProgress((int)current);
-                mCurrentIndicator.setText(getString(R.string.current_indicator, current));
-                double voltage = dbHelper.getInfo(Constants.BATTERY_VOLT);
-                mVoltageProgress.setProgress((int)voltage);
-                mVoltageIndicator.setText(getString(R.string.voltage_indicator, voltage));
+                if (connected || debug) {
+                    double speed = dbHelper.getInfo(Constants.SPEED);
+                    mSpeedProgress.setProgress((int) speed);
+                    mSpeedIndicator.setText(getString(R.string.speed_indicator, (int) speed));
+                    double power = dbHelper.getInfo(Constants.POWER);
+                    mPowerProgress.setProgress((int) power);
+                    mPowerIndicator.setText(getString(R.string.power_indicator, power));
+                    double current = dbHelper.getInfo(Constants.CURRENT);
+                    mCurrentProgress.setProgress((int) current);
+                    mCurrentIndicator.setText(getString(R.string.current_indicator, current));
+                    double voltage = dbHelper.getInfo(Constants.BATTERY_VOLT);
+                    mVoltageProgress.setProgress((int) voltage);
+                    mVoltageIndicator.setText(getString(R.string.voltage_indicator, voltage));
+                    double temp = dbHelper.getInfo(Constants.CONTROL_TEMP);
+                    mTempProgress.setProgress((int) temp);
+                    mTempIndicator.setText(getString(R.string.temp_indicator, temp));
+                    double capacity = dbHelper.getInfo(Constants.BATTERY_REM);
+                    mCapacityProgress.setProgress((int) capacity);
+                    mCapacityIndicator.setText(getString(R.string.capacity_indicator, capacity));
+                }
 
                 UIHandler.postDelayed(this,100);
             }
@@ -253,34 +261,13 @@ public class DashboardFragment extends Fragment {
     private void setupBT() {
         Log.d(TAG, "setupChat()");
 
-        // Initialize the array adapter for the conversation thread
-        mConversationArrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.message);
-
-        mConversationView.setAdapter(mConversationArrayAdapter);
-
-        // Initialize the compose field with a listener for the return key
-        mOutEditText.setOnEditorActionListener(mWriteListener);
-
-        // Initialize the send button with a listener that for click events
-        mSendButton.setOnClickListener(v -> {
-            // Send a message using content of the edit text widget
-            View view = getView();
-            if (null != view) {
-                TextView textView = view.findViewById(R.id.edit_text_out);
-                String message = textView.getText().toString();
-                sendMessage(message);
-            }
-        });
-
         getActivity().startService(new Intent(getActivity(), MonitorService.class));
         getActivity().bindService(new Intent(getActivity(), MonitorService.class), myConnection, Context.BIND_AUTO_CREATE);
 
-        // Initialize the buffer for outgoing messages
-        mOutStringBuffer = new StringBuffer();
     }
 
     private MonitorService mMonitorService;
-    private ServiceConnection myConnection = new ServiceConnection() {
+    private final ServiceConnection myConnection = new ServiceConnection() {
 
         public void onServiceConnected(ComponentName className, IBinder binder) {
             mMonitorService = ((MonitorService.LocalBinder) binder).getService();
@@ -292,44 +279,6 @@ public class DashboardFragment extends Fragment {
         public void onServiceDisconnected(ComponentName className) {
             Log.d(TAG,"Monitor service disconnected");
         }
-    };
-
-    /**
-     * Sends a message.
-     *
-     * @param message A string of text to send.
-     */
-    private void sendMessage(String message) {
-        // Check that we're actually connected before trying anything
-        if (mMonitorService.getState() != MonitorService.STATE_CONNECTED)
-        {
-            Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Check that there's actually something to send
-        if (message.length() > 0) {
-            message = "pwm_freq=" + message + "&";
-            // Get the message bytes and tell the BluetoothChatService to write
-            byte[] send = message.getBytes();
-            mMonitorService.write(send);
-
-            // Reset out string buffer to zero and clear the edit text field
-            mOutStringBuffer.setLength(0);
-            mOutEditText.setText(mOutStringBuffer);
-        }
-    }
-
-    /**
-     * The action listener for the EditText widget, to listen for the return key
-     */
-    private final TextView.OnEditorActionListener mWriteListener = (view, actionId, event) -> {
-        // If the action is a key-up event on the return key, send the message
-        if (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_UP) {
-            String message = view.getText().toString();
-            sendMessage(message);
-        }
-        return true;
     };
 
     /**
@@ -390,27 +339,15 @@ public class DashboardFragment extends Fragment {
                         case BluetoothService.STATE_CONNECTED:
                             setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
                             connected = true;
-                            mConversationArrayAdapter.clear();
                             break;
                         case BluetoothService.STATE_CONNECTING:
                             setStatus(R.string.title_connecting);
                             break;
                         case BluetoothService.STATE_NONE:
+                            resetStats();
                             setStatus(R.string.title_not_connected);
                             break;
                     }
-                    break;
-                case Constants.MESSAGE_WRITE:
-                    byte[] writeBuf = (byte[]) msg.obj;
-                    // construct a string from the buffer
-                    String writeMessage = new String(writeBuf);
-                    mConversationArrayAdapter.add("Me: " + writeMessage);
-                    break;
-                case Constants.MESSAGE_READ:
-                    String readMessage = (String) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    parseData(readMessage);
-                    mConversationArrayAdapter.add(mConnectedDeviceName + ": " + readMessage);
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
@@ -442,33 +379,14 @@ public class DashboardFragment extends Fragment {
         mMonitorService.connect(device);
     }
 
-    private void parseData(String input)
+    private void resetStats()
     {
-        StringTokenizer token = new StringTokenizer(input, "=");
-        if (token.countTokens() == 2)
-        {
-            String key = token.nextToken();
-            String val = token.nextToken();
-            //switch (key) {
-            //    case Constants.POWER:
-            //        mPowerIndicator.setText(getString(R.string.power_indicator, val));
-            //        mPowerProgress.setProgress((int)Float.parseFloat(val));
-            //        break;
-            //    case Constants.CURRENT:
-            //        mCurrentIndicator.setText(getString(R.string.current_indicator, val));
-            //        mCurrentProgress.setProgress((int)Float.parseFloat(val));
-            //        break;
-            //    case Constants.BATTERY_VOLT:
-            //        mVoltageIndicator.setText(getString(R.string.voltage_indicator, val));
-            //        mVoltageProgress.setProgress((int)Float.parseFloat(val));
-            //        break;
-            //    default:
-            //        Log.d(TAG,"Unexpected key value: " + key);
-            //}
-        }
-        else
-        {
-            Log.d(TAG, "Received non-parsable information from MCU");
-        }
+        mSpeedIndicator.setText("--");
+        mCapacityIndicator.setText("--");
+        mTempIndicator.setText("--");
+        mPowerIndicator.setText("--");
+        mVoltageIndicator.setText("--");
+        mCurrentIndicator.setText("--");
     }
+
 }

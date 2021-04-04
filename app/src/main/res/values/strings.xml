@@ -9,11 +9,11 @@
 
     <!-- Messages Preferences -->
     <string name="current_toggle_title">Current limit</string>
-    <string name="current_limit_title">Current limit [A]</string>
+    <string name="current_limit_title">Current limit</string>
 
     <!-- Sync Preferences -->
     <string name="power_toggle_title">Power limit</string>
-    <string name="power_limit_title">Power limit [W]</string>
+    <string name="power_limit_title">Power limit</string>
 
     <!--  BluetoothChat -->
     <string name="send">Send</string>
@@ -36,11 +36,21 @@
     <string name="insecure_connect">Connect a device</string>
     <string name="discoverable">Make discoverable</string>
 
+    <string name="settings_action">Settings</string>
+    <string name="disconnect_action">Disconnect</string>
+
     <string name="power_indicator">%1$.2f W</string>
     <string name="voltage_indicator">%1$.2f V</string>
     <string name="current_indicator">%1$.2f A</string>
-    <string name="settings_action">Settings</string>
-    <string name="disconnect_action">Disconnect</string>
+    <string name="capacity_indicator">%1$.0f%%</string>
+    <string name="temp_indicator">%1$.0f°C</string>
     <string name="speed_indicator">%1$d</string>
+
+    <string name="power_label">Power: </string>
+    <string name="voltage_label">Voltage: </string>
+    <string name="current_label">Current: </string>
+    <string name="capacity_label">Battery Remaining: </string>
+    <string name="temp_label">Temperature: </string>
+    <string name="speed_unit">KPH</string>
 
 </resources>

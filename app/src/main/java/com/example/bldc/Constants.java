@@ -23,6 +23,6 @@ public interface Constants {
     String MAX_CURRENT_DRAW = "max_crnt_draw";
     String BATTERY_CHEMISTRY = "batt_chem";
     String DRIVING_MODE = "drive_mode";
-    String THROTTLE_CAL = "thrtl_cal_req";
+    String BATTERY_CELLS = "batt_cells";
 
 }

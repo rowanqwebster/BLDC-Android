@@ -1,12 +1,30 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string-array name="driving_modes">
+        <item>Speed control</item>
+        <item>Econ</item>
+        <item>Sport</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="mode_indices">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
+
+    <string-array name="battery_chems">
+        <item>Lithium-Ion</item>
+        <item>Lithium-Polymer</item>
+        <item>Lithium-Iron-Phosphate</item>
+        <item>Ni-MH</item>
+        <item>Lead-Acid</item>
+    </string-array>
+
+    <string-array name="battery_indices">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
 </resources>

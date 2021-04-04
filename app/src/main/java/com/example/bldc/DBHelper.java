@@ -34,24 +34,20 @@ public class DBHelper extends SQLiteOpenHelper {
                 + Constants.CONTROL_TEMP + " REAL DEFAULT 0,"
                 + Constants.BATTERY_VOLT + " REAL DEFAULT 0,"
                 + Constants.BATTERY_REM + " REAL DEFAULT 0,"
-                + Constants.PWM_FREQ + " REAL DEFAULT 0,"
-                + Constants.MAX_SPEED + " REAL DEFAULT 0,"
-                + Constants.MAX_POWER_DRAW + " REAL DEFAULT 0,"
-                + Constants.MAX_CURRENT_DRAW + " REAL DEFAULT 0,"
+                + Constants.PWM_FREQ + " INTEGER DEFAULT 0,"
+                + Constants.MAX_SPEED + " INTEGER DEFAULT 0,"
+                + Constants.MAX_POWER_DRAW + " INTEGER DEFAULT 0,"
+                + Constants.MAX_CURRENT_DRAW + " INTEGER DEFAULT 0,"
                 + Constants.BATTERY_CHEMISTRY + " INTEGER DEFAULT 0,"
                 + Constants.DRIVING_MODE + " INTEGER DEFAULT 0,"
-                + Constants.THROTTLE_CAL + " INTEGER DEFAULT 0"
+                + Constants.BATTERY_CELLS + " INTEGER DEFAULT 0"
                 + ")";
-        Log.i("test","test");
         db.execSQL(CREATE_INFO_TABLE);
         db.execSQL("INSERT INTO " + TABLE_INFO + " DEFAULT VALUES");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_INFO);
-
         // Create tables again
         onCreate(db);
     }
@@ -72,7 +68,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         catch (SQLException e)
         {
-            Log.i(TAG, "Database update failed");
+            Log.e(TAG, "Database update failed", e);
         }
     }
 
@@ -88,7 +84,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         catch (SQLException e)
         {
-            Log.d(TAG,"Database query failed");
+            Log.e(TAG,"Database query failed", e);
         }
         return result;
     }
