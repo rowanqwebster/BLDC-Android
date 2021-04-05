@@ -11,33 +11,30 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SeekBarPreference;
+import androidx.preference.SwitchPreference;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     private final String TAG = "SettingsFragment";
 
-    private EditTextPreference powerLimitPreference;
-    private EditTextPreference voltageLimitPreference;
+    private SwitchPreference battFlagPreference;
+    private SeekBarPreference powerLimitPreference;
+    private SeekBarPreference currentLimitPreference;
+    private SeekBarPreference pwmFreqPreference;
+    private SeekBarPreference batteryNumPreference;
+    private SeekBarPreference speedLimitPreference;
+    private ListPreference driveModePreference;
+    private ListPreference battChemPreference;
     private BluetoothService BTService;
     private DBHelper dbHelper;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
-
-        SeekBarPreference batteryNumPref = findPreference("batt_num");
-        if (batteryNumPref != null) {
-            batteryNumPref.setMin(6);
-        }
-        SeekBarPreference pwmPref = findPreference("pwm_freq");
-        if (pwmPref !=null)
-        {
-            pwmPref.setMin(2);
-        }
         Log.i(TAG, "ocp");
     }
 
@@ -54,11 +51,60 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.i(TAG,"ovc");
 
-        //powerLimitPreference = findPreference("power_limit");
-        //powerLimitPreference.setText(String.valueOf(dbHelper.getInfo(Constants.MAX_POWER_DRAW)));
-        //powerLimitPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.MAX_POWER_DRAW));
+        battFlagPreference = findPreference("battery_connected");
+        if (battFlagPreference != null){
+            battFlagPreference.setChecked((int)dbHelper.getInfo(Constants.BATTERY_FLAG)==1);
+            battFlagPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                String command = Constants.BATTERY_FLAG + "=" + ((boolean) newValue ? 1 : 0) + "&";
+                mMonitorService.write(command.getBytes());
+                Log.d(TAG, command);
+                return true;
+            });
+        }
+        batteryNumPreference = findPreference("batt_num");
+        if (batteryNumPreference != null) {
+            batteryNumPreference.setMin(6);
+            batteryNumPreference.setValue((int) dbHelper.getInfo(Constants.BATTERY_CELLS));
+            batteryNumPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.BATTERY_CELLS));
+        }
+        pwmFreqPreference = findPreference("pwm_freq");
+        if (pwmFreqPreference !=null)
+        {
+            pwmFreqPreference.setMin(2);
+            pwmFreqPreference.setValue((int) dbHelper.getInfo(Constants.PWM_FREQ));
+            pwmFreqPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.PWM_FREQ));
+        }
+        powerLimitPreference = findPreference("power_limit");
+        if (powerLimitPreference != null)
+        {
+            powerLimitPreference.setValue((int) dbHelper.getInfo(Constants.MAX_POWER_DRAW));
+            powerLimitPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.MAX_POWER_DRAW));
+        }
+        currentLimitPreference = findPreference("current_limit");
+        if (currentLimitPreference != null)
+        {
+            currentLimitPreference.setValue((int) dbHelper.getInfo(Constants.MAX_CURRENT_DRAW));
+            currentLimitPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.MAX_CURRENT_DRAW));
+        }
+        speedLimitPreference = findPreference("speed_limit");
+        if (speedLimitPreference != null)
+        {
+            speedLimitPreference.setValue((int) dbHelper.getInfo(Constants.MAX_SPEED));
+            speedLimitPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.MAX_SPEED));
+        }
+        driveModePreference = findPreference("driving_mode");
+        if (driveModePreference != null)
+        {
+            driveModePreference.setValue(String.valueOf((int)dbHelper.getInfo(Constants.DRIVING_MODE)));
+            driveModePreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.DRIVING_MODE));
+        }
+        battChemPreference = findPreference("battery_chemistry");
+        if (battChemPreference != null)
+        {
+            battChemPreference.setValue(String.valueOf((int)dbHelper.getInfo(Constants.BATTERY_CHEMISTRY)));
+            battChemPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.BATTERY_CHEMISTRY));
+        }
     }
 
     @Override
@@ -91,11 +137,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
-            String command = preferenceConst + "=" + (String) newValue + "&";
-            byte[] bytes = command.getBytes();
-            mMonitorService.write(bytes);
+            String command = preferenceConst + "=" + newValue + "&";
+            mMonitorService.write(command.getBytes());
+            Log.d(TAG, command);
             return true;
         }
     }
-
 }

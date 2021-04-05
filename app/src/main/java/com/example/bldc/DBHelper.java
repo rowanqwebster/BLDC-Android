@@ -27,21 +27,21 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INFO);
         String CREATE_INFO_TABLE = "CREATE TABLE " + TABLE_INFO + "("
-                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_ID + " REAL PRIMARY KEY,"
                 + Constants.SPEED + " REAL DEFAULT 0,"
                 + Constants.POWER + " REAL DEFAULT 0,"
                 + Constants.CURRENT + " REAL DEFAULT 0,"
                 + Constants.CONTROL_TEMP + " REAL DEFAULT 0,"
                 + Constants.BATTERY_VOLT + " REAL DEFAULT 0,"
                 + Constants.BATTERY_REM + " REAL DEFAULT 0,"
-                + Constants.PWM_FREQ + " INTEGER DEFAULT 0,"
-                + Constants.MAX_SPEED + " INTEGER DEFAULT 0,"
-                + Constants.MAX_POWER_DRAW + " INTEGER DEFAULT 0,"
-                + Constants.MAX_CURRENT_DRAW + " INTEGER DEFAULT 0,"
-                + Constants.BATTERY_CHEMISTRY + " INTEGER DEFAULT 0,"
-                + Constants.DRIVING_MODE + " INTEGER DEFAULT 0,"
-                + Constants.BATTERY_CELLS + " INTEGER DEFAULT 0,"
-                + Constants.BATTERY_FLAG + " INTEGER DEFAULT 0"
+                + Constants.PWM_FREQ + " REAL DEFAULT 2,"
+                + Constants.MAX_SPEED + " REAL DEFAULT 0,"
+                + Constants.MAX_POWER_DRAW + " REAL DEFAULT 0,"
+                + Constants.MAX_CURRENT_DRAW + " REAL DEFAULT 0,"
+                + Constants.BATTERY_CHEMISTRY + " REAL DEFAULT 0,"
+                + Constants.DRIVING_MODE + " REAL DEFAULT 0,"
+                + Constants.BATTERY_CELLS + " REAL DEFAULT 6,"
+                + Constants.BATTERY_FLAG + " REAL DEFAULT 0"
                 + ")";
         db.execSQL(CREATE_INFO_TABLE);
         db.execSQL("INSERT INTO " + TABLE_INFO + " DEFAULT VALUES");

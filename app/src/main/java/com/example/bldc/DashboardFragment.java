@@ -34,7 +34,7 @@ import java.util.Random;
 
 public class DashboardFragment extends Fragment {
 
-    private final Boolean debug = true;
+    private final Boolean debug = false;
     private final String TAG = "DashboardFragment";
 
     // Intent request codes
@@ -195,8 +195,6 @@ public class DashboardFragment extends Fragment {
         mSpeedProgress = view.findViewById(R.id.speed_progress);
         mSpeedIndicator = view.findViewById(R.id.speed_indicator);
 
-        Random r = new Random();
-
         DBHelper dbHelper = new DBHelper(getActivity());
         UIHandler = new Handler(Looper.getMainLooper());
         UIHandler.post(new Runnable() {
@@ -221,6 +219,20 @@ public class DashboardFragment extends Fragment {
                     double capacity = dbHelper.getInfo(Constants.BATTERY_REM);
                     mCapacityProgress.setProgress((int) capacity);
                     mCapacityIndicator.setText(getString(R.string.capacity_indicator, capacity));
+
+                    if ((int)dbHelper.getInfo(Constants.BATTERY_FLAG)==1){
+                        if (capacityProgress.getVisibility() == View.GONE)
+                        {
+                            capacityProgress.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    else
+                    {
+                        if (capacityProgress.getVisibility()==View.VISIBLE){
+                            capacityProgress.setVisibility(View.GONE);
+                        }
+                    }
+
                 }
 
                 UIHandler.postDelayed(this,100);
