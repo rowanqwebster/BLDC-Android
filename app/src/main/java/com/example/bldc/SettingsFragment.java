@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,9 +15,6 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SeekBarPreference;
-
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
@@ -43,6 +38,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         {
             pwmPref.setMin(2);
         }
+        Log.i(TAG, "ocp");
     }
 
     @Override
@@ -53,6 +49,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         dbHelper = new DBHelper(getActivity());
         Log.i(TAG, String.valueOf(dbHelper.getInfo(Constants.BATTERY_VOLT)));
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.i(TAG,"ovc");
+
+        //powerLimitPreference = findPreference("power_limit");
+        //powerLimitPreference.setText(String.valueOf(dbHelper.getInfo(Constants.MAX_POWER_DRAW)));
+        //powerLimitPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.MAX_POWER_DRAW));
     }
 
     @Override
@@ -67,23 +73,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         public void onServiceConnected(ComponentName className, IBinder binder) {
             mMonitorService = ((MonitorService.LocalBinder) binder).getService();
-            Object obj = mMonitorService.getHandler();
-            Log.d(TAG,"Connected to monitor service, handler="+obj);
         }
 
         public void onServiceDisconnected(ComponentName className) {
             Log.d(TAG,"Monitor service disconnected");
         }
     };
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        //powerLimitPreference = findPreference("power_limit");
-        //powerLimitPreference.setText(String.valueOf(dbHelper.getInfo(Constants.MAX_POWER_DRAW)));
-        //powerLimitPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.MAX_POWER_DRAW));
-    }
 
     private class customPreferenceListener implements Preference.OnPreferenceChangeListener
     {

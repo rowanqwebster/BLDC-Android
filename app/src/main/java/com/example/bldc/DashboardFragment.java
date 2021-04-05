@@ -13,18 +13,12 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import org.w3c.dom.Text;
+import java.util.Random;
 
 public class DashboardFragment extends Fragment {
 
@@ -201,6 +195,8 @@ public class DashboardFragment extends Fragment {
         mSpeedProgress = view.findViewById(R.id.speed_progress);
         mSpeedIndicator = view.findViewById(R.id.speed_indicator);
 
+        Random r = new Random();
+
         DBHelper dbHelper = new DBHelper(getActivity());
         UIHandler = new Handler(Looper.getMainLooper());
         UIHandler.post(new Runnable() {
@@ -208,7 +204,7 @@ public class DashboardFragment extends Fragment {
             public void run() {
                 if (connected || debug) {
                     double speed = dbHelper.getInfo(Constants.SPEED);
-                    mSpeedProgress.setProgress((int) speed);
+                    mSpeedProgress.setProgress((int)speed);
                     mSpeedIndicator.setText(getString(R.string.speed_indicator, (int) speed));
                     double power = dbHelper.getInfo(Constants.POWER);
                     mPowerProgress.setProgress((int) power);

@@ -13,13 +13,20 @@
 
     <PreferenceCategory
         android:title="Battery settings">
+        <SwitchPreference
+            android:key="battery_connected"
+            android:title="Use battery"
+            android:summary="Select if using a battery"
+            />
         <ListPreference
+            android:dependency="battery_connected"
             android:key="battery_chemistry"
             android:title="Battery chemistry"
             android:entries="@array/battery_chems"
             android:entryValues="@array/battery_indices"
             app:useSimpleSummaryProvider="true"/>
         <SeekBarPreference
+            android:dependency="battery_connected"
             android:defaultValue="6"
             android:key="batt_num"
             android:summary="Set the number of battery cells"
@@ -45,7 +52,7 @@
             android:summary="Set a power limit for the device in watts"
             android:key="power_limit"
             android:title="@string/power_limit_title"
-            android:max="1000"
+            android:max="500"
             app:showSeekBarValue="true"/>
     </PreferenceCategory>
 
