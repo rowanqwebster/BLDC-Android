@@ -24,5 +24,6 @@ public interface Constants {
     String BATTERY_CHEMISTRY = "batt_chem";
     String DRIVING_MODE = "drive_mode";
     String BATTERY_CELLS = "batt_cells";
+    String BATTERY_FLAG = "batt_flag";
 
 }

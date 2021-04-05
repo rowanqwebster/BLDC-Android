@@ -40,7 +40,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + Constants.MAX_CURRENT_DRAW + " INTEGER DEFAULT 0,"
                 + Constants.BATTERY_CHEMISTRY + " INTEGER DEFAULT 0,"
                 + Constants.DRIVING_MODE + " INTEGER DEFAULT 0,"
-                + Constants.BATTERY_CELLS + " INTEGER DEFAULT 0"
+                + Constants.BATTERY_CELLS + " INTEGER DEFAULT 0,"
+                + Constants.BATTERY_FLAG + " INTEGER DEFAULT 0"
                 + ")";
         db.execSQL(CREATE_INFO_TABLE);
         db.execSQL("INSERT INTO " + TABLE_INFO + " DEFAULT VALUES");
