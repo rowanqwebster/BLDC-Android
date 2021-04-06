@@ -30,8 +30,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import java.util.Random;
-
 public class DashboardFragment extends Fragment {
 
     private final Boolean debug = false;

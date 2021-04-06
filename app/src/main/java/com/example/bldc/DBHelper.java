@@ -27,7 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INFO);
         String CREATE_INFO_TABLE = "CREATE TABLE " + TABLE_INFO + "("
-                + KEY_ID + " REAL PRIMARY KEY,"
+                + KEY_ID + " INTEGER PRIMARY KEY,"
                 + Constants.SPEED + " REAL DEFAULT 0,"
                 + Constants.POWER + " REAL DEFAULT 0,"
                 + Constants.CURRENT + " REAL DEFAULT 0,"
