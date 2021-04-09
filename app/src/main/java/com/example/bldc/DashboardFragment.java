@@ -32,7 +32,7 @@ import androidx.fragment.app.FragmentActivity;
 
 public class DashboardFragment extends Fragment {
 
-    private final Boolean debug = false;
+    private final Boolean debug = true;
     private final String TAG = "DashboardFragment";
 
     // Intent request codes

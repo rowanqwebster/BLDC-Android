@@ -30,17 +30,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
-        Log.i(TAG, "ocp");
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().bindService(new Intent(getActivity(), MonitorService.class), myConnection, Context.BIND_AUTO_CREATE);
-        Log.d(TAG, "Bind");
-
         dbHelper = new DBHelper(getActivity());
-        Log.i(TAG, String.valueOf(dbHelper.getInfo(Constants.BATTERY_VOLT)));
     }
 
     public static float clamp(float val, float min, float max) {
@@ -54,6 +50,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         EditTextPreference currentLimitPref = findPreference("current_limit_2");
         if (currentLimitPref != null)
         {
+            currentLimitPref.setText(String.valueOf(dbHelper.getInfo(Constants.MAX_CURRENT_DRAW)));
             currentLimitPref.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
             currentLimitPref.setOnPreferenceChangeListener((preference, newValue) -> {
                 float clampedValue = clamp(Float.parseFloat(newValue.toString()),0,5);
@@ -70,7 +67,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return valid;
             });
         }
-
         SwitchPreference battFlagPreference = findPreference("battery_connected");
         if (battFlagPreference != null){
             battFlagPreference.setChecked((int)dbHelper.getInfo(Constants.BATTERY_FLAG)==1);
