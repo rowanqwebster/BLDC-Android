@@ -193,6 +193,9 @@ public class DashboardFragment extends Fragment {
         mSpeedProgress = view.findViewById(R.id.speed_progress);
         mSpeedIndicator = view.findViewById(R.id.speed_indicator);
 
+        //int test = (int)(3.34/50*100);
+        //Log.i(TAG,String.valueOf(test));
+
         DBHelper dbHelper = new DBHelper(getActivity());
         UIHandler = new Handler(Looper.getMainLooper());
         UIHandler.post(new Runnable() {
@@ -200,13 +203,13 @@ public class DashboardFragment extends Fragment {
             public void run() {
                 if (connected || debug) {
                     double speed = dbHelper.getInfo(Constants.SPEED);
-                    mSpeedProgress.setProgress((int)speed/50*100);
+                    mSpeedProgress.setProgress((int)(speed/50*100));
                     mSpeedIndicator.setText(getString(R.string.speed_indicator, (int) speed));
                     double power = dbHelper.getInfo(Constants.POWER);
-                    mPowerProgress.setProgress((int) power/250*100);
+                    mPowerProgress.setProgress((int) (power/250*100));
                     mPowerIndicator.setText(getString(R.string.power_indicator, power));
                     double current = dbHelper.getInfo(Constants.CURRENT);
-                    mCurrentProgress.setProgress((int) current/5*100);
+                    mCurrentProgress.setProgress((int) (current/5*100));
                     mCurrentIndicator.setText(getString(R.string.current_indicator, current));
                     double voltage = dbHelper.getInfo(Constants.BATTERY_VOLT);
                     mVoltageProgress.setProgress((int) voltage);
