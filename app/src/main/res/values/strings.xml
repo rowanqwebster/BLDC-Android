@@ -8,11 +8,7 @@
     <string name="power_header">Power regulation</string>
 
     <!-- Messages Preferences -->
-    <string name="current_toggle_title">Current limit</string>
-    <string name="current_limit_title">Current limit</string>
-
-    <!-- Sync Preferences -->
-    <string name="power_toggle_title">Power limit</string>
+    <string name="current_limit_title">Current limit [A]</string>
     <string name="power_limit_title">Power limit</string>
 
     <!--  BluetoothChat -->

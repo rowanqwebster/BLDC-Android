@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -21,15 +25,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private final String TAG = "SettingsFragment";
 
-    private SwitchPreference battFlagPreference;
-    private SeekBarPreference powerLimitPreference;
-    private SeekBarPreference currentLimitPreference;
-    private SeekBarPreference pwmFreqPreference;
-    private SeekBarPreference batteryNumPreference;
-    private SeekBarPreference speedLimitPreference;
-    private ListPreference driveModePreference;
-    private ListPreference battChemPreference;
-    private BluetoothService BTService;
     private DBHelper dbHelper;
 
     @Override
@@ -48,11 +43,35 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Log.i(TAG, String.valueOf(dbHelper.getInfo(Constants.BATTERY_VOLT)));
     }
 
+    public static float clamp(float val, float min, float max) {
+        return Math.max(min, Math.min(max, val));
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        battFlagPreference = findPreference("battery_connected");
+        EditTextPreference currentLimitPref = findPreference("current_limit_2");
+        if (currentLimitPref != null)
+        {
+            currentLimitPref.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+            currentLimitPref.setOnPreferenceChangeListener((preference, newValue) -> {
+                float clampedValue = clamp(Float.parseFloat(newValue.toString()),0,5);
+                boolean valid = Float.parseFloat(newValue.toString()) == clampedValue;
+                if (!valid)
+                {
+                    Toast.makeText(getActivity(),"Invalid value", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    String command = Constants.MAX_CURRENT_DRAW + "=" + Float.parseFloat(newValue.toString()) + "&";
+                    mMonitorService.write(command.getBytes());
+                    Log.d(TAG, command);
+                }
+                return valid;
+            });
+        }
+
+        SwitchPreference battFlagPreference = findPreference("battery_connected");
         if (battFlagPreference != null){
             battFlagPreference.setChecked((int)dbHelper.getInfo(Constants.BATTERY_FLAG)==1);
             battFlagPreference.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -62,44 +81,44 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return true;
             });
         }
-        batteryNumPreference = findPreference("batt_num");
+        SeekBarPreference batteryNumPreference = findPreference("batt_num");
         if (batteryNumPreference != null) {
             batteryNumPreference.setMin(6);
             batteryNumPreference.setValue((int) dbHelper.getInfo(Constants.BATTERY_CELLS));
             batteryNumPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.BATTERY_CELLS));
         }
-        pwmFreqPreference = findPreference("pwm_freq");
+        SeekBarPreference pwmFreqPreference = findPreference("pwm_freq");
         if (pwmFreqPreference !=null)
         {
             pwmFreqPreference.setMin(2);
             pwmFreqPreference.setValue((int) dbHelper.getInfo(Constants.PWM_FREQ));
             pwmFreqPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.PWM_FREQ));
         }
-        powerLimitPreference = findPreference("power_limit");
+        SeekBarPreference powerLimitPreference = findPreference("power_limit");
         if (powerLimitPreference != null)
         {
             powerLimitPreference.setValue((int) dbHelper.getInfo(Constants.MAX_POWER_DRAW));
             powerLimitPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.MAX_POWER_DRAW));
         }
-        currentLimitPreference = findPreference("current_limit");
+        SeekBarPreference currentLimitPreference = findPreference("current_limit");
         if (currentLimitPreference != null)
         {
             currentLimitPreference.setValue((int) dbHelper.getInfo(Constants.MAX_CURRENT_DRAW));
             currentLimitPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.MAX_CURRENT_DRAW));
         }
-        speedLimitPreference = findPreference("speed_limit");
+        SeekBarPreference speedLimitPreference = findPreference("speed_limit");
         if (speedLimitPreference != null)
         {
             speedLimitPreference.setValue((int) dbHelper.getInfo(Constants.MAX_SPEED));
             speedLimitPreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.MAX_SPEED));
         }
-        driveModePreference = findPreference("driving_mode");
+        ListPreference driveModePreference = findPreference("driving_mode");
         if (driveModePreference != null)
         {
             driveModePreference.setValue(String.valueOf((int)dbHelper.getInfo(Constants.DRIVING_MODE)));
             driveModePreference.setOnPreferenceChangeListener(new customPreferenceListener(Constants.DRIVING_MODE));
         }
-        battChemPreference = findPreference("battery_chemistry");
+        ListPreference battChemPreference = findPreference("battery_chemistry");
         if (battChemPreference != null)
         {
             battChemPreference.setValue(String.valueOf((int)dbHelper.getInfo(Constants.BATTERY_CHEMISTRY)));

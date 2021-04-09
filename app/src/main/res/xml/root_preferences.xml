@@ -38,12 +38,19 @@
 
     <PreferenceCategory
         android:title="@string/current_header">
+        <EditTextPreference
+            android:summary="Set a current limit for the device in amps"
+            android:key="current_limit_2"
+            android:title="@string/current_limit_title"
+            app:useSimpleSummaryProvider="true"/>
+        <!--
         <SeekBarPreference
             android:summary="Set a current limit for the device in amps"
             android:key="current_limit"
             android:title="@string/current_limit_title"
             android:max="10"
             app:showSeekBarValue="true" />
+            -->
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -52,7 +59,7 @@
             android:summary="Set a power limit for the device in watts"
             android:key="power_limit"
             android:title="@string/power_limit_title"
-            android:max="500"
+            android:max="250"
             app:showSeekBarValue="true"/>
     </PreferenceCategory>
 

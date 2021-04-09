@@ -200,13 +200,13 @@ public class DashboardFragment extends Fragment {
             public void run() {
                 if (connected || debug) {
                     double speed = dbHelper.getInfo(Constants.SPEED);
-                    mSpeedProgress.setProgress((int)speed);
+                    mSpeedProgress.setProgress((int)speed/50*100);
                     mSpeedIndicator.setText(getString(R.string.speed_indicator, (int) speed));
                     double power = dbHelper.getInfo(Constants.POWER);
-                    mPowerProgress.setProgress((int) power);
+                    mPowerProgress.setProgress((int) power/250*100);
                     mPowerIndicator.setText(getString(R.string.power_indicator, power));
                     double current = dbHelper.getInfo(Constants.CURRENT);
-                    mCurrentProgress.setProgress((int) current);
+                    mCurrentProgress.setProgress((int) current/5*100);
                     mCurrentIndicator.setText(getString(R.string.current_indicator, current));
                     double voltage = dbHelper.getInfo(Constants.BATTERY_VOLT);
                     mVoltageProgress.setProgress((int) voltage);
