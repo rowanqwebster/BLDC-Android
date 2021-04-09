@@ -358,7 +358,7 @@ public class MonitorService extends Service {
                         String readMessage = stringBuilder.substring(0, index);
                         mHandler.obtainMessage(Constants.MESSAGE_READ, -1, -1, readMessage).sendToTarget();
                         updateDB(readMessage);
-                        Log.i(TAG, "Received string: " + readMessage);
+                        //Log.i(TAG, "Received string: " + readMessage);
                         stringBuilder.delete(0, index + 1);
                     }
                 }
