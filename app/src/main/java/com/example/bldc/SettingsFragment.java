@@ -21,6 +21,8 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreference;
 
+import java.util.Locale;
+
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     private final String TAG = "SettingsFragment";
@@ -50,7 +52,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         EditTextPreference currentLimitPref = findPreference("current_limit_2");
         if (currentLimitPref != null)
         {
-            currentLimitPref.setText(String.valueOf(dbHelper.getInfo(Constants.MAX_CURRENT_DRAW)));
+            currentLimitPref.setText(String.format(Locale.getDefault(),"%.2f", dbHelper.getInfo(Constants.MAX_CURRENT_DRAW)));
             currentLimitPref.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
             currentLimitPref.setOnPreferenceChangeListener((preference, newValue) -> {
                 float clampedValue = clamp(Float.parseFloat(newValue.toString()),0,5);

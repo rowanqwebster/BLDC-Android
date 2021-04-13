@@ -32,7 +32,7 @@ import androidx.fragment.app.FragmentActivity;
 
 public class DashboardFragment extends Fragment {
 
-    private final Boolean debug = true;
+    private final Boolean debug = false;
     private final String TAG = "DashboardFragment";
 
     // Intent request codes
@@ -193,9 +193,6 @@ public class DashboardFragment extends Fragment {
         mSpeedProgress = view.findViewById(R.id.speed_progress);
         mSpeedIndicator = view.findViewById(R.id.speed_indicator);
 
-        //int test = (int)(3.34/50*100);
-        //Log.i(TAG,String.valueOf(test));
-
         DBHelper dbHelper = new DBHelper(getActivity());
         UIHandler = new Handler(Looper.getMainLooper());
         UIHandler.post(new Runnable() {
@@ -203,21 +200,25 @@ public class DashboardFragment extends Fragment {
             public void run() {
                 if (connected || debug) {
                     double speed = dbHelper.getInfo(Constants.SPEED);
-                    mSpeedProgress.setProgress((int)(speed/50*100));
-                    mSpeedIndicator.setText(getString(R.string.speed_indicator, (int) speed));
                     double power = dbHelper.getInfo(Constants.POWER);
-                    mPowerProgress.setProgress((int) (power/250*100));
-                    mPowerIndicator.setText(getString(R.string.power_indicator, power));
                     double current = dbHelper.getInfo(Constants.CURRENT);
-                    mCurrentProgress.setProgress((int) (current/5*100));
-                    mCurrentIndicator.setText(getString(R.string.current_indicator, current));
                     double voltage = dbHelper.getInfo(Constants.BATTERY_VOLT);
+                    double temp = dbHelper.getInfo(Constants.CONTROL_TEMP);
+                    double capacity = dbHelper.getInfo(Constants.BATTERY_REM);
+                    double maxPower = dbHelper.getInfo(Constants.MAX_POWER_DRAW);
+                    double maxCurrent = dbHelper.getInfo(Constants.MAX_CURRENT_DRAW);
+                    double maxSpeed = dbHelper.getInfo(Constants.MAX_SPEED);
+
+                    mSpeedProgress.setProgress((int)(speed/maxSpeed*100));
+                    mSpeedIndicator.setText(getString(R.string.speed_indicator, (int) speed));
+                    mPowerProgress.setProgress((int) (power/maxPower*100));
+                    mPowerIndicator.setText(getString(R.string.power_indicator, power));
+                    mCurrentProgress.setProgress((int) (current/maxCurrent*100));
+                    mCurrentIndicator.setText(getString(R.string.current_indicator, current));
                     mVoltageProgress.setProgress((int) voltage);
                     mVoltageIndicator.setText(getString(R.string.voltage_indicator, voltage));
-                    double temp = dbHelper.getInfo(Constants.CONTROL_TEMP);
                     mTempProgress.setProgress((int) temp);
                     mTempIndicator.setText(getString(R.string.temp_indicator, temp));
-                    double capacity = dbHelper.getInfo(Constants.BATTERY_REM);
                     mCapacityProgress.setProgress((int) capacity);
                     mCapacityIndicator.setText(getString(R.string.capacity_indicator, capacity));
 
@@ -396,6 +397,14 @@ public class DashboardFragment extends Fragment {
         mPowerIndicator.setText("--");
         mVoltageIndicator.setText("--");
         mCurrentIndicator.setText("--");
+
+        mSpeedProgress.setProgress(50);
+        mCapacityProgress.setProgress(50);
+        mTempProgress.setProgress(50);
+        mPowerProgress.setProgress(50);
+        mVoltageProgress.setProgress(50);
+        mCurrentProgress.setProgress(50);
+
     }
 
 }
