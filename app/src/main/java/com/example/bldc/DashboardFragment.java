@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2014 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * FILE MODIFIED FROM BluetoothChatFragment.java TO SUIT THE NEEDS OF THE PROJECT
+ * UI changes to convert from chat application to monitoring application
+ *
+ */
+
 package com.example.bldc;
 
 import android.app.Activity;
@@ -114,7 +134,7 @@ public class DashboardFragment extends Fragment {
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
         if (mMonitorService != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (mMonitorService.getState() == BluetoothService.STATE_NONE) {
+            if (mMonitorService.getState() == MonitorService.STATE_NONE) {
                 // Start the Bluetooth chat services
                 mMonitorService.stop();
             }
@@ -123,7 +143,7 @@ public class DashboardFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.bluetooth_chat, menu);
+        inflater.inflate(R.menu.main_menu, menu);
     }
 
     @Override
@@ -346,14 +366,14 @@ public class DashboardFragment extends Fragment {
                 case Constants.MESSAGE_STATE_CHANGE:
                     connected = false;
                     switch (msg.arg1) {
-                        case BluetoothService.STATE_CONNECTED:
+                        case MonitorService.STATE_CONNECTED:
                             setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
                             connected = true;
                             break;
-                        case BluetoothService.STATE_CONNECTING:
+                        case MonitorService.STATE_CONNECTING:
                             setStatus(R.string.title_connecting);
                             break;
-                        case BluetoothService.STATE_NONE:
+                        case MonitorService.STATE_NONE:
                             resetStats();
                             setStatus(R.string.title_not_connected);
                             break;

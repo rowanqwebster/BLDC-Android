@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             DashboardFragment fragment = new DashboardFragment();
-            transaction.replace(R.id.sample_content_fragment, fragment);
+            transaction.replace(R.id.dashboard_fragment, fragment);
             transaction.commit();
         }
     }

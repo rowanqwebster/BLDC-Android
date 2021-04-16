@@ -1,7 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">BLDC Monitor</string>
-    <string name="title_home">Information</string>
-    <string name="power_action">Power</string>
 
     <!-- Preference Titles -->
     <string name="current_header">Current regulation</string>
@@ -12,8 +10,6 @@
     <string name="power_limit_title">Power limit</string>
 
     <!--  BluetoothChat -->
-    <string name="send">Send</string>
-    <string name="not_connected">You are not connected to a device</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Exiting…</string>
     <string name="title_connecting">Connecting…</string>
     <string name="title_connected_to">Connected to <xliff:g id="device_name">%1$s</xliff:g></string>
@@ -30,7 +26,6 @@
 
     <!-- Options Menu -->
     <string name="insecure_connect">Connect a device</string>
-    <string name="discoverable">Make discoverable</string>
 
     <string name="settings_action">Settings</string>
     <string name="disconnect_action">Disconnect</string>

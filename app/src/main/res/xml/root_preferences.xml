@@ -1,48 +1,44 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory
-        android:title="Driving mode">
+    <PreferenceCategory android:title="Driving mode">
         <ListPreference
-            android:key="driving_mode"
-            android:title="Driving mode"
             android:entries="@array/driving_modes"
             android:entryValues="@array/mode_indices"
-            app:useSimpleSummaryProvider="true"/>
+            android:key="driving_mode"
+            android:title="Driving mode"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="Battery settings">
+    <PreferenceCategory android:title="Battery settings">
         <SwitchPreference
             android:key="battery_connected"
-            android:title="Use battery"
             android:summary="Select if using a battery"
-            />
+            android:title="Use battery" />
         <ListPreference
             android:dependency="battery_connected"
-            android:key="battery_chemistry"
-            android:title="Battery chemistry"
             android:entries="@array/battery_chems"
             android:entryValues="@array/battery_indices"
-            app:useSimpleSummaryProvider="true"/>
+            android:key="battery_chemistry"
+            android:title="Battery chemistry"
+            app:useSimpleSummaryProvider="true" />
         <SeekBarPreference
-            android:dependency="battery_connected"
             android:defaultValue="6"
+            android:dependency="battery_connected"
             android:key="batt_num"
+            android:max="30"
             android:summary="Set the number of battery cells"
             android:title="Number of cells"
-            android:max="30"
-            app:showSeekBarValue="true"/>
+            app:showSeekBarValue="true" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/current_header">
+    <PreferenceCategory android:title="@string/current_header">
         <EditTextPreference
-            android:summary="Set a current limit for the device in amps"
             android:key="current_limit_2"
+            android:summary="Set a current limit for the device in amps"
             android:title="@string/current_limit_title"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true" />
         <!--
         <SeekBarPreference
             android:summary="Set a current limit for the device in amps"
@@ -53,35 +49,32 @@
             -->
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/power_header">
+    <PreferenceCategory android:title="@string/power_header">
         <SeekBarPreference
-            android:summary="Set a power limit for the device in watts"
             android:key="power_limit"
-            android:title="@string/power_limit_title"
             android:max="250"
-            app:showSeekBarValue="true"/>
+            android:summary="Set a power limit for the device in watts"
+            android:title="@string/power_limit_title"
+            app:showSeekBarValue="true" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="Speed regulation">
+    <PreferenceCategory android:title="Speed regulation">
         <SeekBarPreference
-            android:summary="Set a speed limit in kph"
             android:key="speed_limit"
-            android:title="Speed limit"
             android:max="50"
-            app:showSeekBarValue="true"/>
+            android:summary="Set a speed limit in kph"
+            android:title="Speed limit"
+            app:showSeekBarValue="true" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="PWM Configuration">
+    <PreferenceCategory android:title="PWM Configuration">
         <SeekBarPreference
             android:defaultValue="2"
-            android:summary="Set a PWM frequency in kHz"
             android:key="pwm_freq"
-            android:title="PWM frequency"
             android:max="30"
-            app:showSeekBarValue="true"/>
+            android:summary="Set a PWM frequency in kHz"
+            android:title="PWM frequency"
+            app:showSeekBarValue="true" />
     </PreferenceCategory>
 
 </PreferenceScreen>

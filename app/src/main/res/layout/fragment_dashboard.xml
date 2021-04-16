@@ -15,7 +15,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/speed_indicator"
             android:textSize="100sp"
             android:textStyle="bold"
 
@@ -32,7 +31,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/speed_indicator"
             app:layout_constraintStart_toStartOf="@+id/speed_indicator"
-            app:layout_constraintTop_toBottomOf="@+id/speed_indicator"/>
+            app:layout_constraintTop_toBottomOf="@+id/speed_indicator" />
 
         <ProgressBar
             android:id="@+id/speed_progress"
@@ -62,20 +61,24 @@
             android:orientation="vertical">
 
             <include
-                layout="@layout/statistic_progressor"
-                android:id="@+id/power_progress"/>
+                android:id="@+id/power_progress"
+                layout="@layout/statistic_progressor" />
+
             <include
-                layout="@layout/statistic_progressor"
-                android:id="@+id/voltage_progress"/>
+                android:id="@+id/voltage_progress"
+                layout="@layout/statistic_progressor" />
+
             <include
-                layout="@layout/statistic_progressor"
-                android:id="@+id/current_progress"/>
+                android:id="@+id/current_progress"
+                layout="@layout/statistic_progressor" />
+
             <include
-                layout="@layout/statistic_progressor"
-                android:id="@+id/temp_progress"/>
+                android:id="@+id/temp_progress"
+                layout="@layout/statistic_progressor" />
+
             <include
-                layout="@layout/statistic_progressor"
-                android:id="@+id/capacity_progress"/>
+                android:id="@+id/capacity_progress"
+                layout="@layout/statistic_progressor" />
 
         </LinearLayout>
 
